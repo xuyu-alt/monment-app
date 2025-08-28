@@ -1024,22 +1024,30 @@
         .user-actions {
             display: flex;
             gap: 8px;
+            position: relative;
+            z-index: 2;
         }
 
         .profile-action-btn {
             background: transparent;
             border: none;
             color: #007AFF;
-            padding: 8px;
+            padding: 10px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 18px;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            pointer-events: auto;
         }
 
         .profile-action-btn:hover {
@@ -1701,8 +1709,8 @@
             background-color: #e9ecef;
         }
 
-        /* 动态隐私设置 */
-        .privacy-selector {
+        /* 动态隐私设置 - 已移除 */
+        /* .privacy-selector {
             margin: 16px 0;
             display: flex;
             align-items: center;
@@ -1715,7 +1723,7 @@
             min-width: 40px;
         }
 
-        .privacy-option {
+        /* .privacy-option {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1727,20 +1735,20 @@
             font-weight: 500;
             transition: all 0.3s ease;
             background: white;
-        }
+        } */
 
-        .privacy-option:hover {
+        /* .privacy-option:hover {
             border-color: #90EE90;
             background: rgba(144, 238, 144, 0.1);
             transform: translateY(-1px);
-        }
+        } */
 
-        .privacy-option.selected {
+        /* .privacy-option.selected {
             border-color: #90EE90;
             background: #90EE90;
             color: white;
             box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
-        }
+        } */
 
         /* 浮动装饰元素 */
         .floating-elements {
@@ -1917,19 +1925,23 @@
         }
 
         .upload-btn {
-            background: #007AFF;
-            color: white;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff);
+            background-size: 400% 400%;
+            animation: gradientShift 6s ease-in-out infinite;
+            color: #fff;
             border: none;
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .upload-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            filter: brightness(1.02) saturate(1.05);
         }
 
         .media-preview {
@@ -2101,6 +2113,8 @@
             cursor: not-allowed !important;
             transform: none !important;
             box-shadow: none !important;
+            animation: none !important;
+            background-size: initial !important;
         }
 
         /* 移动端触摸反馈 */
@@ -3032,9 +3046,7 @@
                     <button class="profile-action-btn" onclick="openSettings()" title="个人设置">
                         ⚙️
                     </button>
-                    <button class="profile-action-btn" onclick="openFriendsPanel()" title="好友管理">
-                        👥
-                    </button>
+
                 </div>
             </div>
             
@@ -3071,6 +3083,21 @@
                         </button>
                     </div>
                     
+                    <!-- 图片压缩设置（可折叠） -->
+                    <div id="compressionSettingsToggle" style="font-size: 12px; color: #666; cursor: pointer; margin-top: 6px;" onclick="toggleCompressionSettings()">⚙️ 压缩设置</div>
+                    <div id="compressionSettings" style="display:none; margin-top: 8px; background: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px;">
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <label style="font-size:12px; color:#333;">最大宽度</label>
+                            <input id="compMaxWidth" type="number" min="200" max="4096" step="10" style="width:80px; padding:6px; border:1px solid #e5e5e5; border-radius:6px;">
+                            <label style="font-size:12px; color:#333;">最大高度</label>
+                            <input id="compMaxHeight" type="number" min="200" max="4096" step="10" style="width:80px; padding:6px; border:1px solid #e5e5e5; border-radius:6px;">
+                            <label style="font-size:12px; color:#333;">质量</label>
+                            <input id="compQuality" type="number" min="0.1" max="1" step="0.05" style="width:80px; padding:6px; border:1px solid #e5e5e5; border-radius:6px;">
+                            <button class="submit-button" style="padding:6px 10px; font-size:12px;" onclick="saveCompressionSettings()">保存设置</button>
+                        </div>
+                        <div style="font-size:12px; color:#888; margin-top:6px;">说明：更高质量=更清晰，文件也更大；建议质量 0.7~0.85。</div>
+                    </div>
+                    
                     <!-- 媒体预览区域 -->
                     <div class="media-preview" id="mediaPreview">
                         <!-- 上传的媒体将在这里预览 -->
@@ -3088,15 +3115,7 @@
                         <span class="mood-option" data-mood="🤯" onclick="selectMood('🤯')">🤯</span>
                     </div>
                 </div>
-                <div class="privacy-selector">
-                    <span>隐私：</span>
-                    <span class="privacy-option selected" data-privacy="friends" onclick="selectPrivacy('friends')">
-                        🤝 仅好友
-                    </span>
-                    <span class="privacy-option" data-privacy="private" onclick="selectPrivacy('private')">
-                        🛡️ 仅自己
-                    </span>
-                </div>
+
                 <button class="submit-button" id="submitBtn" disabled>发布</button>
             </div>
             
@@ -3155,14 +3174,7 @@
                 <div class="nav-icon">👤</div>
                 <div class="nav-label">我的</div>
             </div>
-            <div class="nav-item" onclick="switchView('circles')">
-                <div class="nav-icon">👥</div>
-                <div class="nav-label">圈子</div>
-            </div>
-            <div class="nav-item" onclick="switchView('friends')">
-                <div class="nav-icon">👫</div>
-                <div class="nav-label">好友</div>
-            </div>
+
         </div>
 
         <div id="momentsList" class="moments-view">
@@ -3181,7 +3193,8 @@
             <!-- 我的动态内容将通过JavaScript动态生成 -->
         </div>
 
-        <div id="friendsView" class="friends-view" style="display: none;">
+        <!-- 已移除好友视图 -->
+<!-- <div id="friendsView" class="friends-view" style="display: none;"> -->
             <!-- 好友内容将通过JavaScript动态生成 -->
         </div>
 
@@ -3306,8 +3319,7 @@
                     <div class="form-group">
                         <label>社交功能：</label>
                         <div style="display: flex; gap: 8px;">
-                            <button class="secondary-button" onclick="openCirclesPanel()">👥 圈子管理</button>
-                            <button class="secondary-button" onclick="openFriendsPanel()">👫 好友管理</button>
+                            
                         </div>
                     </div>
                     
@@ -3325,26 +3337,21 @@
         </div>
     </div>
 
-    <!-- 圈子管理面板 -->
+    <!-- 圈子管理面板（已彻底移除）
     <div id="circlesPanel" class="settings-panel">
         <div class="settings-content">
             <div class="settings-header">
                 <h3>👥 圈子管理</h3>
                 <button class="close-button" onclick="closeCirclesPanel()">×</button>
             </div>
-            
             <div class="circles-tabs">
                 <button class="tab-button active" onclick="switchCirclesTab('my')">我的圈子</button>
                 <button class="tab-button" onclick="switchCirclesTab('create')">创建圈子</button>
                 <button class="tab-button" onclick="switchCirclesTab('discover')">发现圈子</button>
             </div>
-            
             <div id="myCirclesTab" class="tab-content active">
-                <div id="myCirclesList">
-                    <!-- 我的圈子列表 -->
-                </div>
+                <div id="myCirclesList"></div>
             </div>
-            
             <div id="createCirclesTab" class="tab-content">
                 <div class="form-group">
                     <label>圈子名称：</label>
@@ -3364,41 +3371,31 @@
                 </div>
                 <button class="save-button" onclick="createCircle()">创建圈子</button>
             </div>
-            
             <div id="discoverCirclesTab" class="tab-content">
-                <div id="discoverCirclesList">
-                    <!-- 发现圈子列表 -->
-                </div>
+                <div id="discoverCirclesList"></div>
             </div>
         </div>
     </div>
+-->
 
-    <!-- 好友管理面板 -->
+    <!-- 好友管理面板（已彻底移除：我的好友/好友请求/搜索用户）
     <div id="friendsPanel" class="settings-panel">
         <div class="settings-content">
             <div class="settings-header">
                 <h3>👫 好友管理</h3>
                 <button class="close-button" onclick="closeFriendsPanel()">×</button>
             </div>
-            
             <div class="friends-tabs">
                 <button class="tab-button active" onclick="switchFriendsTab('friends')">我的好友</button>
                 <button class="tab-button" onclick="switchFriendsTab('requests')">好友请求</button>
                 <button class="tab-button" onclick="switchFriendsTab('search')">搜索用户</button>
             </div>
-            
             <div id="friendsTab" class="tab-content active">
-                <div id="friendsList">
-                    <!-- 好友列表 -->
-                </div>
+                <div id="friendsList"></div>
             </div>
-            
             <div id="requestsTab" class="tab-content">
-                <div id="friendRequestsList">
-                    <!-- 好友请求列表 -->
-                </div>
+                <div id="friendRequestsList"></div>
             </div>
-            
             <div id="searchTab" class="tab-content">
                 <div class="form-group">
                     <div style="position: relative;">
@@ -3406,16 +3403,16 @@
                         <div id="searchStatus" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #999;"></div>
                     </div>
                 </div>
-                <div id="searchResults">
-                    <!-- 搜索结果 -->
+                <div id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+    -->
                 </div>
             </div>
         </div>
     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 朋友面板结束（已移除） -->
 
     <!-- 分享面板 -->
     <div id="sharePanel" class="share-panel">
@@ -3530,8 +3527,9 @@
                     mainApp.style.display = 'block';
                     mainApp.style.visibility = 'visible';
                     mainApp.style.opacity = '1';
-                    mainApp.style.zIndex = '9999';
-                    mainApp.style.position = 'relative';
+                    // 恢复默认层级，避免遮挡弹层
+                    mainApp.style.zIndex = '';
+                    mainApp.style.position = '';
                     console.log('显示主应用');
                     console.log('mainApp的classList:', mainApp.classList);
                     console.log('mainApp的style:', mainApp.style.display);
@@ -3614,27 +3612,45 @@
         
         // 确保测试用户存在
         function ensureTestUserExists() {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            
-            // 检查是否已有测试用户
-            const testUserExists = users.some(u => u.userId === 'test123');
-            
-            if (!testUserExists) {
-                console.log('创建测试用户...');
-                const testUser = {
-                    id: '1',
-                    name: '测试用户',
-                    userId: 'test123',
-                    password: '123456',
-                    avatar: 'https://via.placeholder.com/40/90EE90/333333?text=测',
-                    createdAt: new Date().toISOString()
-                };
-                users.push(testUser);
-                localStorage.setItem('users', JSON.stringify(users));
-                console.log('测试用户已创建:', testUser);
-            } else {
-                console.log('测试用户已存在');
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem('users') || '[]');
+            } catch (e) {
+                console.warn('users 数据损坏，已重置');
+                users = [];
             }
+            
+            // 若当前用户已存在，合并到 users 列表，保证搜索可见
+            if (currentUser) {
+                const exists = users.some(u => u.id === currentUser.id);
+                if (!exists) {
+                    users.push({ id: currentUser.id, name: currentUser.name, userId: currentUser.userId, avatar: currentUser.avatar });
+                }
+            }
+            
+            // 生成示例用户（供搜索）- 使用固定ID，便于按ID搜索
+            const samples = [
+                { id: 'demo_1', name: '小明', userId: 'xiaoming001' },
+                { id: 'demo_2', name: '小红', userId: 'xiaohong001' },
+                { id: 'demo_3', name: '小李', userId: 'xiaoli001' },
+                { id: 'demo_4', name: '小王', userId: 'xiaowang001' }
+            ];
+            const hasOthers = users.some(u => !currentUser || u.id !== currentUser.id);
+            if (!hasOthers) {
+                samples.forEach(s => {
+                    const existed = users.some(u => u.userId === s.userId);
+                    if (!existed) {
+                        users.push({
+                            id: s.id,
+                            name: s.name,
+                            userId: s.userId,
+                            avatar: `https://via.placeholder.com/40/4ECDC4/FFFFFF?text=${s.name.charAt(0)}`
+                        });
+                    }
+                });
+            }
+            
+            localStorage.setItem('users', JSON.stringify(users));
         }
         
         // 处理登录
@@ -3889,7 +3905,8 @@
         // AI相关数据
         let aiImages = [];
         let selectedMood = '🥰';
-        let selectedPrivacy = 'friends';
+        // 隐私功能已移除，默认仅自己可见
+        let selectedPrivacy = 'private';
 
         // 媒体上传数据
         let uploadedMedia = [];
@@ -4260,7 +4277,7 @@
                 type: 'text',
                 mood: selectedMood,
                 weather: getCurrentWeather(),
-                privacy: selectedPrivacy, // 添加隐私设置
+                privacy: 'private', // 隐私功能已移除，默认仅自己可见
                 likes: [],
                 comments: [],
                 createdAt: new Date()
@@ -4416,6 +4433,11 @@
             
             // 确保测试用户存在
             ensureTestUserExists();
+            
+            // 载入压缩设置与倒计时
+            loadCompressionSettings();
+            loadCountdowns();
+            renderCountdowns();
             
             checkLoginStatus();
             createParticles();
@@ -4713,13 +4735,25 @@
             // 保存到本地存储
             localStorage.setItem('userSettings', JSON.stringify(userSettings));
 
-            // 更新当前用户信息
+            // 更新当前用户信息（内存）
             if (userSettings.avatarImage) {
                 currentUser.avatar = userSettings.avatarImage;
             } else {
                 currentUser.avatar = `https://via.placeholder.com/40/${userSettings.avatarColor.replace('#', '')}/${userSettings.avatarTextColor.replace('#', '')}?text=${newName}`;
             }
             currentUser.name = newName;
+
+            // 同步到本地存储（currentUser 和 users 列表）
+            try {
+                // 覆盖 currentUser
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                // 同步 users 列表
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const updatedUsers = users.map(u => u.id === currentUser.id ? { ...u, name: currentUser.name, avatar: currentUser.avatar } : u);
+                localStorage.setItem('users', JSON.stringify(updatedUsers));
+            } catch (e) {
+                console.error('保存用户信息到本地失败:', e);
+            }
 
             // 更新用户信息显示
             updateUserInfoDisplay();
@@ -5092,10 +5126,14 @@
 
         // 视图切换
         function switchView(viewName) {
+            if (viewName === 'friends' || viewName === 'circles') {
+                alert(viewName === 'friends' ? '好友功能已关闭' : '圈子功能已关闭');
+                return;
+            }
             console.log('切换到视图:', viewName);
             
             // 隐藏所有视图
-            const views = ['momentsList', 'timelineView', 'myView', 'circlesView', 'friendsView'];
+            const views = ['momentsList', 'timelineView', 'myView'];
             views.forEach(viewId => {
                 const element = document.getElementById(viewId);
                 if (element) {
@@ -5117,8 +5155,8 @@
                 document.getElementById('circlesView').style.display = 'block';
                 renderCirclesView();
             } else if (viewName === 'friends') {
-                document.getElementById('friendsView').style.display = 'block';
-                renderFriendsView();
+                // 好友视图已移除
+                return;
             }
             
             // 更新底部导航按钮状态
@@ -5178,7 +5216,7 @@
                             type: 'voice',
                             mood: selectedMood,
                             weather: getCurrentWeather(),
-                            privacy: selectedPrivacy, // 添加隐私设置
+                            privacy: 'private', // 隐私功能已移除，默认仅自己可见
                             audioUrl: audioUrl,
                             likes: [],
                             comments: [],
@@ -5267,7 +5305,7 @@
                     type: 'ai',
                     mood: selectedMood,
                     weather: getCurrentWeather(),
-                    privacy: selectedPrivacy, // 添加隐私设置
+                    privacy: 'private', // 隐私功能已移除，默认仅自己可见
                     images: aiImages,
                     likes: [],
                     comments: [],
@@ -5533,14 +5571,8 @@
             document.body.removeChild(link);
         }
 
-        // 隐私选择
-        function selectPrivacy(privacy) {
-            selectedPrivacy = privacy;
-            document.querySelectorAll('.privacy-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-        }
+        // 隐私功能已移除，无操作
+        function selectPrivacy() { return; }
 
         // 圈子管理面板
         function openCirclesPanel() {
@@ -5566,16 +5598,70 @@
         }
 
         // 好友管理面板
+        // 好友功能已关闭，避免报错
         function openFriendsPanel() {
-            document.getElementById('friendsPanel').style.display = 'flex';
+            alert('好友功能已关闭');
+            return;
+        }
+
+        // 圈子功能已关闭，避免报错
+        function openCirclesPanel() {
+            alert('圈子功能已关闭');
+            return;
+        }
+
+        // 原函数保留在下方，已不再被调用
+        function _openFriendsPanelLegacy() {
+            const panel = document.getElementById('friendsPanel');
+            panel.style.display = 'flex';
+            
+            // 确保用户数据存在
+            ensureTestUserExists();
+            
+            // 同步 allUsers（从 localStorage 读取）
+            try {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                // 过滤掉无效项
+                allUsers = users
+                    .filter(u => u && u.id && u.name && u.userId)
+                    .map(u => ({ id: u.id, name: u.name, userId: u.userId, avatar: u.avatar }));
+            } catch (e) {
+                allUsers = [];
+            }
+            
+            // 若还是没有可搜索用户，强制注入固定示例用户
+            if (!allUsers.some(u => !currentUser || u.id !== currentUser.id)) {
+                const samples = [
+                    { id: 'demo_1', name: '小明', userId: 'xiaoming001' },
+                    { id: 'demo_2', name: '小红', userId: 'xiaohong001' },
+                    { id: 'demo_3', name: '小李', userId: 'xiaoli001' },
+                    { id: 'demo_4', name: '小王', userId: 'xiaowang001' }
+                ];
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                samples.forEach(s => {
+                    if (!users.some(u => u.userId === s.userId)) {
+                        users.push({ id: s.id, name: s.name, userId: s.userId, avatar: `https://via.placeholder.com/40/4ECDC4/FFFFFF?text=${s.name.charAt(0)}` });
+                    }
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                allUsers = users
+                    .filter(u => u && u.id && u.name && u.userId)
+                    .map(u => ({ id: u.id, name: u.name, userId: u.userId, avatar: u.avatar }));
+            }
+            
             renderFriends();
             renderFriendRequests();
             
-            // 确保用户数据已加载，并显示所有用户供搜索
-            generateSampleUsers();
-            const container = document.getElementById('searchResults');
-            const allOtherUsers = allUsers.filter(user => user.id !== currentUser.id);
-            renderSearchResults(allOtherUsers, container);
+            // 默认切到"搜索用户"页，并聚焦
+            switchFriendsTab('search');
+            setTimeout(() => {
+                const input = document.getElementById('searchUserInput');
+                if (input) input.focus();
+                // 初始渲染全部可搜索用户（排除自己），避免空白
+                const container = document.getElementById('searchResults');
+                const allOtherUsers = allUsers.filter(user => !currentUser || user.id !== currentUser.id);
+                renderSearchResults(allOtherUsers, container);
+            }, 0);
         }
 
         function closeFriendsPanel() {
@@ -5583,15 +5669,19 @@
         }
 
         function switchFriendsTab(tabName) {
+            // 内容区切换
             document.querySelectorAll('#friendsPanel .tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            document.querySelectorAll('#friendsPanel .tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            const contentEl = document.getElementById(tabName + 'Tab');
+            if (contentEl) contentEl.classList.add('active');
             
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            event.target.classList.add('active');
+            // 按钮高亮
+            const buttons = Array.from(document.querySelectorAll('#friendsPanel .tab-button'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            const nameToIndex = { friends: 0, requests: 1, search: 2 };
+            const idx = nameToIndex[tabName];
+            if (idx !== undefined && buttons[idx]) buttons[idx].classList.add('active');
         }
 
         // 创建圈子
@@ -5783,7 +5873,8 @@
                 clearTimeout(searchTimeout);
             }
             
-            const query = event.target.value.trim();
+            const input = event.target || event.srcElement;
+            const query = (input && input.value ? input.value : '').trim();
             const statusElement = document.getElementById('searchStatus');
             
             // 如果查询为空，立即显示所有用户
@@ -5836,8 +5927,7 @@
             const queryLower = query.toLowerCase();
             const results = allUsers.filter(user => 
                 user.id !== currentUser.id && 
-                (user.name.toLowerCase().includes(queryLower) || 
-                 user.userId.toLowerCase().includes(queryLower))
+                user.userId && user.userId.toLowerCase().includes(queryLower)
             );
             
             // 缓存结果
@@ -6063,12 +6153,14 @@
 
         // 视图切换增强
         function switchView(viewName) {
+            if (viewName === 'friends' || viewName === 'circles') {
+                alert(viewName === 'friends' ? '好友功能已关闭' : '圈子功能已关闭');
+                return;
+            }
             if (viewName === 'list') {
                 document.getElementById('momentsList').style.display = 'block';
                 document.getElementById('timelineView').style.display = 'none';
                 document.getElementById('myView').style.display = 'none';
-                document.getElementById('circlesView').style.display = 'none';
-                document.getElementById('friendsView').style.display = 'none';
             } else if (viewName === 'timeline') {
                 document.getElementById('momentsList').style.display = 'none';
                 document.getElementById('timelineView').style.display = 'block';
@@ -6305,40 +6397,8 @@
             }
         }
 
-        // 渲染好友视图
-        function renderFriendsView() {
-            const friends = allUsers.filter(user => 
-                friendships.friends.includes(user.id)
-            );
-            
-            const container = document.getElementById('friendsView');
-            container.innerHTML = `
-                <div style="padding: 20px;">
-                    <h3 style="margin: 0 0 16px 0; color: #333;">👫 我的好友 (${friends.length})</h3>
-                    ${friends.length === 0 ? `
-                        <div style="text-align: center; padding: 40px; color: #666;">
-                            <div style="font-size: 48px; margin-bottom: 16px;">👥</div>
-                            <div>还没有好友，快去添加吧！</div>
-                            <button class="quick-friends-btn" onclick="openFriendsPanel()" style="margin-top: 16px;">
-                                👫 添加好友
-                            </button>
-                        </div>
-                    ` : friends.map(friend => `
-                        <div class="friend-item">
-                            <div class="friend-avatar">${friend.name.charAt(0)}</div>
-                            <div class="friend-info">
-                                <div class="friend-name">${friend.name}</div>
-                                <div class="friend-id">ID: ${friend.userId}</div>
-                            </div>
-                            <div class="friend-actions">
-                                <button class="circle-button secondary" onclick="viewFriendProfile('${friend.id}')">查看资料</button>
-                                <button class="circle-button secondary" onclick="chatWithFriend('${friend.id}')">聊天</button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
+        // 好友视图已移除
+        function renderFriendsView() { return; /* no-op */ }
 
         // 文件大小限制（MB）
         const FILE_SIZE_LIMITS = {
@@ -6948,6 +7008,7 @@
                 }, 300);
             }, 3000);
         }
-    </script>
-</body>
-</html> 
+        
+        </script>
+    </body>
+    </html>
