@@ -1740,6 +1740,29 @@
             50% { background-position: 100% 50%; }
         }
 
+        /* 通知动画 */
+        @keyframes slideIn {
+            from {
+                transform: translateX(-50%) translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-50%) translateY(-100%);
+                opacity: 0;
+            }
+        }
+
 
 
         /* 媒体上传样式 */
@@ -1941,6 +1964,35 @@
         .moment-attachment .download-btn:hover {
             background: #5a6fd8;
             transform: translateY(-1px);
+        }
+
+        /* 媒体上传优化样式 */
+        .upload-btn:disabled {
+            background: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .media-item img,
+        .media-item video {
+            transition: transform 0.3s ease;
+        }
+
+        .media-item:hover img,
+        .media-item:hover video {
+            transform: scale(1.05);
+        }
+
+        /* 处理中状态样式 */
+        .media-item .loading-animation {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
         }
     </style>
 </head>
@@ -4583,128 +4635,340 @@
             `;
         }
 
+        // 文件大小限制（MB）
+        const FILE_SIZE_LIMITS = {
+            image: 10,
+            video: 50,
+            audio: 20,
+            file: 10
+        };
+
         // 媒体上传处理函数
-        function handleImageUpload(event) {
+        async function handleImageUpload(event) {
             const files = Array.from(event.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
+            
+            // 检查文件数量限制
+            if (uploadedMedia.length + files.length > 9) {
+                alert('最多只能上传9个文件');
+                return;
+            }
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // 检查文件大小
+                if (file.size > FILE_SIZE_LIMITS.image * 1024 * 1024) {
+                    alert(`图片文件 ${file.name} 超过 ${FILE_SIZE_LIMITS.image}MB 限制`);
+                    continue;
+                }
+                
+                // 创建临时预览项
+                const tempId = 'temp_' + Date.now() + '_' + i;
+                const tempItem = {
+                    id: tempId,
+                    type: 'image',
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    status: 'processing'
+                };
+                uploadedMedia.push(tempItem);
+                updateMediaPreview();
+                
+                try {
+                    // 压缩图片
+                    const compressedUrl = await compressImage(file);
                     const mediaItem = {
                         id: Date.now().toString() + Math.random(),
                         type: 'image',
-                        url: e.target.result,
+                        url: compressedUrl,
                         name: file.name,
                         size: formatFileSize(file.size),
                         file: file
                     };
-                    uploadedMedia.push(mediaItem);
+                    
+                    // 替换临时项
+                    const index = uploadedMedia.findIndex(item => item.id === tempId);
+                    if (index !== -1) {
+                        uploadedMedia[index] = mediaItem;
+                    }
                     updateMediaPreview();
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function handleVideoUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const mediaItem = {
-                        id: Date.now().toString() + Math.random(),
-                        type: 'video',
-                        url: e.target.result,
-                        name: file.name,
-                        size: formatFileSize(file.size),
-                        file: file
-                    };
-                    uploadedMedia.push(mediaItem);
+                } catch (error) {
+                    console.error('图片处理失败:', error);
+                    // 移除临时项
+                    uploadedMedia = uploadedMedia.filter(item => item.id !== tempId);
                     updateMediaPreview();
-                };
-                reader.readAsDataURL(file);
+                    alert(`图片 ${file.name} 处理失败`);
+                }
             }
         }
 
-        function handleAudioUpload(event) {
+        async function handleVideoUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const mediaItem = {
-                        id: Date.now().toString() + Math.random(),
-                        type: 'audio',
-                        url: e.target.result,
-                        name: file.name,
-                        size: formatFileSize(file.size),
-                        file: file
-                    };
-                    uploadedMedia.push(mediaItem);
-                    updateMediaPreview();
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+            
+            // 检查文件数量限制
+            if (uploadedMedia.length >= 9) {
+                alert('最多只能上传9个文件');
+                return;
             }
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
+            
+            // 检查文件大小
+            if (file.size > FILE_SIZE_LIMITS.video * 1024 * 1024) {
+                alert(`视频文件超过 ${FILE_SIZE_LIMITS.video}MB 限制`);
+                return;
+            }
+            
+            // 创建临时预览项
+            const tempId = 'temp_' + Date.now();
+            const tempItem = {
+                id: tempId,
+                type: 'video',
+                name: file.name,
+                size: formatFileSize(file.size),
+                status: 'processing'
+            };
+            uploadedMedia.push(tempItem);
+            updateMediaPreview();
+            
+            try {
+                // 创建视频URL
+                const videoUrl = URL.createObjectURL(file);
                 const mediaItem = {
                     id: Date.now().toString() + Math.random(),
-                    type: 'file',
+                    type: 'video',
+                    url: videoUrl,
                     name: file.name,
                     size: formatFileSize(file.size),
                     file: file
                 };
-                uploadedMedia.push(mediaItem);
+                
+                // 替换临时项
+                const index = uploadedMedia.findIndex(item => item.id === tempId);
+                if (index !== -1) {
+                    uploadedMedia[index] = mediaItem;
+                }
                 updateMediaPreview();
+            } catch (error) {
+                console.error('视频处理失败:', error);
+                uploadedMedia = uploadedMedia.filter(item => item.id !== tempId);
+                updateMediaPreview();
+                alert('视频处理失败');
             }
+        }
+
+        async function handleAudioUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 检查文件数量限制
+            if (uploadedMedia.length >= 9) {
+                alert('最多只能上传9个文件');
+                return;
+            }
+            
+            // 检查文件大小
+            if (file.size > FILE_SIZE_LIMITS.audio * 1024 * 1024) {
+                alert(`音频文件超过 ${FILE_SIZE_LIMITS.audio}MB 限制`);
+                return;
+            }
+            
+            // 创建临时预览项
+            const tempId = 'temp_' + Date.now();
+            const tempItem = {
+                id: tempId,
+                type: 'audio',
+                name: file.name,
+                size: formatFileSize(file.size),
+                status: 'processing'
+            };
+            uploadedMedia.push(tempItem);
+            updateMediaPreview();
+            
+            try {
+                // 创建音频URL
+                const audioUrl = URL.createObjectURL(file);
+                const mediaItem = {
+                    id: Date.now().toString() + Math.random(),
+                    type: 'audio',
+                    url: audioUrl,
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    file: file
+                };
+                
+                // 替换临时项
+                const index = uploadedMedia.findIndex(item => item.id === tempId);
+                if (index !== -1) {
+                    uploadedMedia[index] = mediaItem;
+                }
+                updateMediaPreview();
+            } catch (error) {
+                console.error('音频处理失败:', error);
+                uploadedMedia = uploadedMedia.filter(item => item.id !== tempId);
+                updateMediaPreview();
+                alert('音频处理失败');
+            }
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 检查文件数量限制
+            if (uploadedMedia.length >= 9) {
+                alert('最多只能上传9个文件');
+                return;
+            }
+            
+            // 检查文件大小
+            if (file.size > FILE_SIZE_LIMITS.file * 1024 * 1024) {
+                alert(`文件超过 ${FILE_SIZE_LIMITS.file}MB 限制`);
+                return;
+            }
+            
+            const mediaItem = {
+                id: Date.now().toString() + Math.random(),
+                type: 'file',
+                name: file.name,
+                size: formatFileSize(file.size),
+                file: file
+            };
+            uploadedMedia.push(mediaItem);
+            updateMediaPreview();
+        }
+
+        // 图片压缩函数
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = () => {
+                    // 计算压缩后的尺寸
+                    const maxWidth = 800;
+                    const maxHeight = 600;
+                    let { width, height } = img;
+                    
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = (width * maxHeight) / height;
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // 绘制压缩后的图片
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // 转换为base64，质量0.8
+                    const compressedUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    resolve(compressedUrl);
+                };
+                
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
         }
 
         function updateMediaPreview() {
             const preview = document.getElementById('mediaPreview');
-            preview.innerHTML = uploadedMedia.map(media => {
-                if (media.type === 'image') {
-                    return `
-                        <div class="media-item">
-                            <img src="${media.url}" alt="${media.name}">
-                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+            
+            // 使用文档片段优化DOM操作
+            const fragment = document.createDocumentFragment();
+            
+            uploadedMedia.forEach(media => {
+                const mediaItem = document.createElement('div');
+                mediaItem.className = 'media-item';
+                
+                if (media.status === 'processing') {
+                    // 显示处理中的状态
+                    mediaItem.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                            <div class="loading-animation" style="margin-bottom: 8px;"></div>
+                            <div style="font-size: 12px; color: #666;">处理中...</div>
+                            <div style="font-size: 10px; color: #999; margin-top: 4px;">${media.name}</div>
                         </div>
+                        <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                    `;
+                } else if (media.type === 'image') {
+                    mediaItem.innerHTML = `
+                        <img src="${media.url}" alt="${media.name}" loading="lazy">
+                        <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
                     `;
                 } else if (media.type === 'video') {
-                    return `
-                        <div class="media-item">
-                            <video src="${media.url}" muted></video>
-                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
-                        </div>
+                    mediaItem.innerHTML = `
+                        <video src="${media.url}" muted preload="metadata"></video>
+                        <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
                     `;
                 } else if (media.type === 'audio') {
-                    return `
-                        <div class="media-item">
-                            <div class="file-icon">🎧</div>
-                            <div class="file-info">
-                                <div class="file-name">${media.name}</div>
-                                <div class="file-size">${media.size}</div>
-                            </div>
-                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                    mediaItem.innerHTML = `
+                        <div class="file-icon">🎧</div>
+                        <div class="file-info">
+                            <div class="file-name">${media.name}</div>
+                            <div class="file-size">${media.size}</div>
                         </div>
+                        <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
                     `;
                 } else {
-                    return `
-                        <div class="media-item">
-                            <div class="file-icon">📎</div>
-                            <div class="file-info">
-                                <div class="file-name">${media.name}</div>
-                                <div class="file-size">${media.size}</div>
-                            </div>
-                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                    mediaItem.innerHTML = `
+                        <div class="file-icon">📎</div>
+                        <div class="file-info">
+                            <div class="file-name">${media.name}</div>
+                            <div class="file-size">${media.size}</div>
                         </div>
+                        <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
                     `;
                 }
-            }).join('');
+                
+                fragment.appendChild(mediaItem);
+            });
+            
+            // 清空并重新添加
+            preview.innerHTML = '';
+            preview.appendChild(fragment);
+            
+            // 更新上传按钮状态
+            updateUploadButtonsState();
         }
 
         function removeMedia(mediaId) {
             uploadedMedia = uploadedMedia.filter(media => media.id !== mediaId);
             updateMediaPreview();
+        }
+
+        // 更新上传按钮状态
+        function updateUploadButtonsState() {
+            const uploadButtons = document.querySelectorAll('.upload-btn');
+            const isFull = uploadedMedia.length >= 9;
+            
+            uploadButtons.forEach(btn => {
+                if (isFull) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                } else {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }
+            });
+            
+            // 更新提示信息
+            const mediaPreview = document.getElementById('mediaPreview');
+            if (isFull) {
+                const fullMessage = document.createElement('div');
+                fullMessage.style.cssText = 'text-align: center; padding: 10px; color: #666; font-size: 12px; background: #f8f9fa; border-radius: 8px; margin-top: 8px;';
+                fullMessage.textContent = '已达到最大上传数量（9个文件）';
+                mediaPreview.appendChild(fullMessage);
+            }
         }
 
         function formatFileSize(bytes) {
@@ -4716,33 +4980,121 @@
         }
 
         // 更新动态创建函数，支持隐私设置和媒体
-        function handleCreateMoment(content) {
-            const newMoment = {
-                id: Date.now().toString(),
-                user: {
-                    id: currentUser.id,
-                    name: currentUser.name,
-                    avatar: userSettings.avatarImage || currentUser.avatar
-                },
-                content: content,
-                type: 'text',
-                mood: selectedMood,
-                weather: getCurrentWeather(),
-                privacy: selectedPrivacy,
-                media: [...uploadedMedia], // 复制媒体数组
-                likes: [],
-                comments: [],
-                createdAt: new Date()
-            };
-            moments.unshift(newMoment);
-            saveMoments(); // 保存到本地存储
+        async function handleCreateMoment(content) {
+            // 检查是否有正在处理的媒体
+            const processingMedia = uploadedMedia.filter(media => media.status === 'processing');
+            if (processingMedia.length > 0) {
+                alert('请等待媒体文件处理完成后再发布');
+                return;
+            }
             
-            // 清空媒体数组
-            uploadedMedia = [];
-            updateMediaPreview();
+            // 显示发布进度
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '发布中...';
+            submitBtn.disabled = true;
             
-            renderMoments();
+            try {
+                // 异步处理媒体文件
+                const processedMedia = await Promise.all(
+                    uploadedMedia.map(async (media) => {
+                        if (media.type === 'image' && media.url.startsWith('data:')) {
+                            // 图片已经是base64格式，直接使用
+                            return media;
+                        } else if (media.type === 'video' || media.type === 'audio') {
+                            // 视频和音频需要转换为base64
+                            return await convertMediaToBase64(media);
+                        } else {
+                            return media;
+                        }
+                    })
+                );
+                
+                const newMoment = {
+                    id: Date.now().toString(),
+                    user: {
+                        id: currentUser.id,
+                        name: currentUser.name,
+                        avatar: userSettings.avatarImage || currentUser.avatar
+                    },
+                    content: content,
+                    type: uploadedMedia.length > 0 ? 'media' : 'text',
+                    mood: selectedMood,
+                    weather: getCurrentWeather(),
+                    privacy: selectedPrivacy,
+                    media: processedMedia,
+                    likes: [],
+                    comments: [],
+                    createdAt: new Date()
+                };
+                
+                moments.unshift(newMoment);
+                saveMoments(); // 保存到本地存储
+                
+                // 清空媒体数组
+                uploadedMedia = [];
+                updateMediaPreview();
+                
+                renderMoments();
+                
+                // 显示成功提示
+                showNotification('✅ 动态发布成功！', 'success');
+                
+            } catch (error) {
+                console.error('发布失败:', error);
+                showNotification('❌ 发布失败，请重试', 'error');
+            } finally {
+                // 恢复按钮状态
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // 转换媒体文件为base64
+        function convertMediaToBase64(media) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    resolve({
+                        ...media,
+                        url: e.target.result
+                    });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(media.file);
+            });
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? 'linear-gradient(135deg, #90EE90, #7CFC00)' : 
+                           type === 'error' ? 'linear-gradient(135deg, #FF6B6B, #FF8E8E)' : 
+                           'linear-gradient(135deg, #667eea, #764ba2)'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
         }
     </script>
 </body>
 </html> 
+
