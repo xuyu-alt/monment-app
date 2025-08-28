@@ -19,11 +19,16 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             color: #333;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            /* 移动端优化 */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
         }
 
         body::before {
@@ -49,15 +54,28 @@
         }
 
         .app {
-            max-width: 600px;
+            max-width: 100%;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: #ffffff;
             min-height: 100vh;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border-radius: 0 0 20px 20px;
             position: relative;
             overflow: hidden;
+            /* 移动端样式 */
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        /* 移动端适配 */
+        @media (min-width: 768px) {
+            .app {
+                max-width: 375px;
+                margin: 0 auto;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                border-radius: 20px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                min-height: calc(100vh - 40px);
+            }
         }
 
         .app::before {
@@ -77,11 +95,14 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            /* 移动端状态栏 */
+            padding-top: calc(15px + env(safe-area-inset-top));
         }
 
         .header::before {
@@ -101,24 +122,18 @@
         }
 
         .header-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
             text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
-            background: linear-gradient(45deg, #fff, #f0f8ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .create-moment {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
-            padding: 24px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e5e5;
             position: relative;
         }
 
@@ -134,18 +149,17 @@
 
         .create-moment-input {
             width: 100%;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 16px;
-            padding: 16px;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 80px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            resize: none;
+            min-height: 60px;
             font-family: inherit;
-            margin-bottom: 16px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
         }
 
         .create-moment-input:focus {
@@ -156,18 +170,17 @@
         }
 
         .submit-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #007AFF;
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 12px 24px;
+            border-radius: 8px;
+            padding: 12px 20px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: relative;
-            overflow: hidden;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .submit-button::before {
@@ -198,16 +211,12 @@
         }
 
         .moment-item {
-            padding: 20px;
-            margin: 16px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            padding: 16px 20px;
+            margin: 0;
+            border-bottom: 1px solid #e5e5e5;
+            background: #ffffff;
+            transition: all 0.2s ease;
             position: relative;
-            overflow: hidden;
         }
 
         .moment-item::before {
@@ -239,13 +248,12 @@
         }
 
         .moment-avatar {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
         }
 
         .moment-avatar:hover {
@@ -279,15 +287,15 @@
         }
 
         .action-button {
-            background: rgba(102, 126, 234, 0.1);
+            background: transparent;
             border: none;
             padding: 8px 12px;
             cursor: pointer;
-            color: #667eea;
+            color: #666;
             font-size: 14px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 400;
         }
 
         .action-button:hover {
@@ -814,10 +822,12 @@
         /* 创建动态标签页样式 */
         .create-tabs {
             display: flex;
-            gap: 8px;
+            gap: 0;
             margin-bottom: 16px;
-            border-bottom: 1px solid #e9ecef;
-            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
         }
 
         .tab-button {
@@ -829,15 +839,18 @@
             font-size: 14px;
             transition: all 0.2s;
             color: #666;
+            flex: 1;
+            text-align: center;
         }
 
         .tab-button.active {
-            background-color: #90EE90;
-            color: #333;
+            background-color: #ffffff;
+            color: #007AFF;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .tab-button:hover:not(.active) {
-            background-color: #f8f9fa;
+            background-color: rgba(0, 122, 255, 0.1);
         }
 
         .tab-content {
@@ -887,13 +900,11 @@
         .user-profile-display {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(144, 238, 144, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            gap: 12px;
+            padding: 12px 0;
+            background: transparent;
+            margin-bottom: 16px;
+            border: none;
         }
 
         .user-avatar {
@@ -901,18 +912,17 @@
         }
 
         .avatar-circle {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
             color: white;
-            background: linear-gradient(135deg, #90EE90, #7CFC00);
-            box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
-            border: 2px solid white;
+            background: #007AFF;
+            border: none;
         }
 
         .user-info {
@@ -920,16 +930,16 @@
         }
 
         .user-name {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
             color: #333;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .user-id {
-            font-size: 14px;
-            color: #666;
-            font-family: monospace;
+            font-size: 12px;
+            color: #999;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .user-actions {
@@ -938,14 +948,14 @@
         }
 
         .profile-action-btn {
-            background: rgba(144, 238, 144, 0.1);
-            border: 1px solid rgba(144, 238, 144, 0.3);
-            color: #333;
+            background: transparent;
+            border: none;
+            color: #007AFF;
             padding: 8px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            transition: all 0.2s ease;
+            font-size: 18px;
             width: 36px;
             height: 36px;
             display: flex;
@@ -1767,12 +1777,12 @@
 
         /* 媒体上传样式 */
         .media-upload-area {
-            margin: 16px 0;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 16px;
-            border: 2px dashed rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
+            margin: 12px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            transition: all 0.2s ease;
         }
 
         .media-upload-area:hover {
@@ -1788,15 +1798,14 @@
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #007AFF;
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
+            border-radius: 6px;
+            padding: 8px 12px;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            transition: all 0.2s ease;
         }
 
         .upload-btn:hover {
@@ -1975,6 +1984,46 @@
             box-shadow: none !important;
         }
 
+        /* 移动端触摸反馈 */
+        .nav-item:active,
+        .action-button:active,
+        .profile-action-btn:active,
+        .upload-btn:active,
+        .submit-button:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        /* 移动端滚动优化 */
+        .moments-view,
+        .timeline-view,
+        .my-view,
+        .circles-view,
+        .friends-view {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* 移动端字体优化 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .moment-username {
+                font-size: 15px;
+            }
+            
+            .moment-text {
+                font-size: 15px;
+                line-height: 1.4;
+            }
+        }
+
         .media-item img,
         .media-item video {
             transition: transform 0.3s ease;
@@ -1993,6 +2042,191 @@
             border-radius: 50%;
             border-top-color: #667eea;
             animation: spin 1s ease-in-out infinite;
+        }
+
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+
+        .nav-item.active {
+            color: #007AFF;
+        }
+
+        .nav-item:not(.active) {
+            color: #999;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* 为底部导航腾出空间 */
+        .moments-view,
+        .timeline-view,
+        .my-view,
+        .circles-view,
+        .friends-view {
+            padding-bottom: 80px;
+        }
+
+        /* 媒体查看器样式 */
+        .media-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .media-viewer.active {
+            display: flex;
+        }
+
+        .media-viewer-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .media-viewer img,
+        .media-viewer video {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .media-viewer-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .media-viewer-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .media-viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .media-viewer-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .media-viewer-prev {
+            left: 20px;
+        }
+
+        .media-viewer-next {
+            right: 20px;
+        }
+
+        .media-viewer-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        /* 可点击的媒体样式 */
+        .clickable-media {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clickable-media:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -2133,13 +2367,28 @@
 
 
 
-        <!-- 视图切换 -->
-        <div style="display: flex; gap: 8px; margin-bottom: 16px; padding: 0 20px;">
-            <button class="tab-button active" onclick="switchView('list')">📝 列表</button>
-            <button class="tab-button" onclick="switchView('timeline')">📅 时间线</button>
-            <button class="tab-button" onclick="switchView('my')">👤 我的动态</button>
-            <button class="tab-button" onclick="switchView('circles')">👥 圈子</button>
-            <button class="tab-button" onclick="switchView('friends')">👫 好友</button>
+        <!-- 底部导航栏 -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchView('list')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">首页</div>
+            </div>
+            <div class="nav-item" onclick="switchView('timeline')">
+                <div class="nav-icon">📅</div>
+                <div class="nav-label">时间线</div>
+            </div>
+            <div class="nav-item" onclick="switchView('my')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">我的</div>
+            </div>
+            <div class="nav-item" onclick="switchView('circles')">
+                <div class="nav-icon">👥</div>
+                <div class="nav-label">圈子</div>
+            </div>
+            <div class="nav-item" onclick="switchView('friends')">
+                <div class="nav-icon">👫</div>
+                <div class="nav-label">好友</div>
+            </div>
         </div>
 
         <div id="momentsList" class="moments-view">
@@ -2181,6 +2430,10 @@
                         <div class="user-id-copy">
                             <span id="userIDText">XY001</span>
                             <button class="copy-btn" onclick="copyUserID()">📋 复制ID</button>
+                            <button class="copy-btn" onclick="regenerateUserID()" style="margin-left: 8px; background: #667eea;">🔄 重新生成</button>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #666; text-align: center;">
+                            💡 用户ID格式：昵称+时间戳+随机数+字母，确保唯一性
                         </div>
                     </div>
                 </div>
@@ -2422,6 +2675,17 @@
         </div>
     </div>
 
+    <!-- 媒体查看器 -->
+    <div id="mediaViewer" class="media-viewer" onclick="closeMediaViewer()">
+        <div class="media-viewer-content" onclick="event.stopPropagation()">
+            <button class="media-viewer-close" onclick="closeMediaViewer()">×</button>
+            <button class="media-viewer-nav media-viewer-prev" onclick="showPrevMedia()">‹</button>
+            <button class="media-viewer-nav media-viewer-next" onclick="showNextMedia()">›</button>
+            <div id="mediaViewerContent"></div>
+            <div class="media-viewer-counter" id="mediaViewerCounter"></div>
+        </div>
+    </div>
+
     <!-- 隐藏的文件输入 -->
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
     <input type="file" id="backgroundInput" accept="image/*" style="display: none;" onchange="handleBackgroundUpload(event)">
@@ -2495,6 +2759,15 @@
             sent: [] // 发送的好友请求
         };
 
+        // 生成唯一用户ID
+        function generateUniqueUserId(name) {
+            const timestamp = Date.now().toString().slice(-6); // 取时间戳后6位
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            return `${name}${timestamp}${random}${randomLetter}`;
+        }
+
         // 生成一些示例用户用于演示
         function generateSampleUsers() {
             // 总是生成示例用户，确保搜索功能正常工作
@@ -2508,7 +2781,7 @@
                 allUsers.push({
                     id: (index + 2).toString(), // 从2开始，因为1是当前用户
                     name: name,
-                    userId: `${name}${String(index + 1).padStart(3, '0')}`,
+                    userId: generateUniqueUserId(name),
                     avatar: `https://via.placeholder.com/40/${sampleColors[index].replace('#', '')}/FFFFFF?text=${name.charAt(0)}`
                 });
             });
@@ -2530,10 +2803,20 @@
             backgroundImage: null
         };
 
+        // 获取或生成当前用户的唯一ID
+        function getCurrentUserId() {
+            let savedUserId = localStorage.getItem('currentUserId');
+            if (!savedUserId) {
+                savedUserId = generateUniqueUserId(userSettings.name);
+                localStorage.setItem('currentUserId', savedUserId);
+            }
+            return savedUserId;
+        }
+
         const currentUser = {
             id: '1',
             name: userSettings.name,
-            userId: 'XY001', // 唯一用户ID
+            userId: getCurrentUserId(),
             avatar: `https://via.placeholder.com/40/${userSettings.avatarColor.replace('#', '')}/${userSettings.avatarTextColor.replace('#', '')}?text=${userSettings.name}`
         };
 
@@ -2628,9 +2911,15 @@
                             ${moment.media.length === 1 ? 
                                 // 单个媒体文件
                                 moment.media[0].type === 'image' ? 
-                                    `<img src="${moment.media[0].url}" alt="${moment.media[0].name}">` :
+                                    `<div style="position: relative;">
+                                        <img src="${moment.media[0].url}" alt="${moment.media[0].name}" class="clickable-media" onclick="openMediaViewer('${moment.id}', 0)">
+                                    </div>` :
                                 moment.media[0].type === 'video' ? 
-                                    `<video src="${moment.media[0].url}" controls style="width: 100%;"></video>` :
+                                    `<div style="position: relative;">
+                                        <video src="${moment.media[0].url}" controls style="width: 100%;" class="clickable-media" onclick="openMediaViewer('${moment.id}', 0)">
+                                            <div class="media-play-icon">▶️</div>
+                                        </video>
+                                    </div>` :
                                 moment.media[0].type === 'audio' ? 
                                     `<audio src="${moment.media[0].url}" controls style="width: 100%;"></audio>` :
                                     `<div class="moment-attachment">
@@ -2644,11 +2933,17 @@
                             : 
                                 // 多个媒体文件
                                 `<div class="media-grid">
-                                    ${moment.media.map(media => 
+                                    ${moment.media.map((media, index) => 
                                         media.type === 'image' ? 
-                                            `<img src="${media.url}" alt="${media.name}">` :
+                                            `<div style="position: relative;">
+                                                <img src="${media.url}" alt="${media.name}" class="clickable-media" onclick="openMediaViewer('${moment.id}', ${index})">
+                                            </div>` :
                                         media.type === 'video' ? 
-                                            `<video src="${media.url}" controls></video>` :
+                                            `<div style="position: relative;">
+                                                <video src="${media.url}" controls class="clickable-media" onclick="openMediaViewer('${moment.id}', ${index})">
+                                                    <div class="media-play-icon">▶️</div>
+                                                </video>
+                                            </div>` :
                                             `<div class="moment-attachment">
                                                 <div class="file-icon">${media.type === 'audio' ? '🎧' : '📎'}</div>
                                                 <div class="file-info">
@@ -2665,8 +2960,8 @@
 
                     ${moment.images && moment.images.length > 0 ? `
                         <div class="moment-images">
-                            ${moment.images.map(image => `
-                                <img src="${image}" alt="图片" class="moment-image">
+                            ${moment.images.map((image, index) => `
+                                <img src="${image}" alt="图片" class="moment-image clickable-media" onclick="openImageViewer('${moment.id}', ${index})">
                             `).join('')}
                         </div>
                     ` : ''}
@@ -2990,6 +3285,67 @@
                 
                 alert('用户ID已复制到剪贴板');
             });
+        }
+
+        // 重新生成用户ID
+        function regenerateUserID() {
+            if (confirm('确定要重新生成用户ID吗？重新生成后，其他用户将无法通过旧ID找到您。')) {
+                const newUserId = generateUniqueUserId(userSettings.name);
+                currentUser.userId = newUserId;
+                localStorage.setItem('currentUserId', newUserId);
+                
+                // 更新显示
+                updateUserInfoDisplay();
+                
+                // 显示成功提示
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                    z-index: 10000;
+                    font-weight: 500;
+                `;
+                notification.textContent = `🔄 用户ID已重新生成：${newUserId}`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // 检查并更新用户ID格式
+        function updateUserIdsIfNeeded() {
+            // 检查当前用户ID是否需要更新
+            if (currentUser.userId === 'XY001' || currentUser.userId.length < 10) {
+                const newUserId = generateUniqueUserId(userSettings.name);
+                currentUser.userId = newUserId;
+                localStorage.setItem('currentUserId', newUserId);
+                updateUserInfoDisplay();
+            }
+            
+            // 检查示例用户ID是否需要更新
+            const needsUpdate = allUsers.some(user => 
+                user.userId && (user.userId.length < 10 || user.userId.includes('001'))
+            );
+            
+            if (needsUpdate) {
+                allUsers.forEach(user => {
+                    if (user.id !== '1') { // 不是当前用户
+                        if (user.userId.length < 10 || user.userId.includes('001')) {
+                            user.userId = generateUniqueUserId(user.name);
+                        }
+                    }
+                });
+                localStorage.setItem('allUsers', JSON.stringify(allUsers));
+            }
         }
 
         function closeSettings() {
@@ -3799,6 +4155,9 @@
         applyBackground();
         checkTimeCapsules();
         
+        // 检查并更新用户ID格式
+        updateUserIdsIfNeeded();
+        
         // 每分钟更新时间显示
         setInterval(() => {
             renderMoments();
@@ -4041,13 +4400,16 @@
             const container = document.getElementById('friendsList');
             if (friends.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: #666;">
-                        <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
-                        <div>暂无好友</div>
-                        <div style="margin-top: 16px; font-size: 14px; color: #999;">
-                            分享你的ID给朋友：<strong>${currentUser.userId}</strong>
+                                            <div style="text-align: center; padding: 20px; color: #666;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+                            <div>暂无好友</div>
+                            <div style="margin-top: 16px; font-size: 14px; color: #999;">
+                                分享你的ID给朋友：<strong>${currentUser.userId}</strong>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; color: #999;">
+                                💡 每个用户都有唯一的ID，方便朋友搜索添加
+                            </div>
                         </div>
-                    </div>
                 `;
             } else {
                 container.innerHTML = friends.map(friend => `
@@ -4419,11 +4781,24 @@
                 renderFriendsView();
             }
             
-            // 更新按钮状态
-            document.querySelectorAll('[onclick^="switchView"]').forEach(btn => {
-                btn.classList.remove('active');
+            // 更新底部导航状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // 根据视图名称找到对应的导航项
+            const navMap = {
+                'list': 0,
+                'timeline': 1,
+                'my': 2,
+                'circles': 3,
+                'friends': 4
+            };
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            if (navMap[viewName] !== undefined) {
+                navItems[navMap[viewName]].classList.add('active');
+            }
         }
 
         // 渲染圈子视图
@@ -4522,9 +4897,15 @@
                         <div class="moment-media">
                             ${moment.media.length === 1 ? 
                                 moment.media[0].type === 'image' ? 
-                                    `<img src="${moment.media[0].url}" alt="${moment.media[0].name}">` :
+                                    `<div style="position: relative;">
+                                        <img src="${moment.media[0].url}" alt="${moment.media[0].name}" class="clickable-media" onclick="openMediaViewer('${moment.id}', 0)">
+                                    </div>` :
                                 moment.media[0].type === 'video' ? 
-                                    `<video src="${moment.media[0].url}" controls style="width: 100%;"></video>` :
+                                    `<div style="position: relative;">
+                                        <video src="${moment.media[0].url}" controls style="width: 100%;" class="clickable-media" onclick="openMediaViewer('${moment.id}', 0)">
+                                            <div class="media-play-icon">▶️</div>
+                                        </video>
+                                    </div>` :
                                 moment.media[0].type === 'audio' ? 
                                     `<audio src="${moment.media[0].url}" controls style="width: 100%;"></audio>` :
                                     `<div class="moment-attachment">
@@ -4537,11 +4918,17 @@
                                     </div>`
                             : 
                                 `<div class="media-grid">
-                                    ${moment.media.map(media => 
+                                    ${moment.media.map((media, index) => 
                                         media.type === 'image' ? 
-                                            `<img src="${media.url}" alt="${media.name}">` :
+                                            `<div style="position: relative;">
+                                                <img src="${media.url}" alt="${media.name}" class="clickable-media" onclick="openMediaViewer('${moment.id}', ${index})">
+                                            </div>` :
                                         media.type === 'video' ? 
-                                            `<video src="${media.url}" controls></video>` :
+                                            `<div style="position: relative;">
+                                                <video src="${media.url}" controls class="clickable-media" onclick="openMediaViewer('${moment.id}', ${index})">
+                                                    <div class="media-play-icon">▶️</div>
+                                                </video>
+                                            </div>` :
                                             `<div class="moment-attachment">
                                                 <div class="file-icon">${media.type === 'audio' ? '🎧' : '📎'}</div>
                                                 <div class="file-info">
@@ -5065,6 +5452,155 @@
             });
         }
 
+        // 媒体查看器相关变量
+        let currentMediaList = [];
+        let currentMediaIndex = 0;
+        let currentMomentId = null;
+
+        // 打开媒体查看器
+        function openMediaViewer(momentId, mediaIndex) {
+            const moment = moments.find(m => m.id === momentId);
+            if (!moment || !moment.media) return;
+            
+            currentMomentId = momentId;
+            currentMediaList = moment.media.filter(media => media.type === 'image' || media.type === 'video');
+            currentMediaIndex = mediaIndex;
+            
+            if (currentMediaList.length === 0) return;
+            
+            showMediaInViewer();
+            document.getElementById('mediaViewer').classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+
+        // 打开图片查看器（兼容旧格式）
+        function openImageViewer(momentId, imageIndex) {
+            const moment = moments.find(m => m.id === momentId);
+            if (!moment || !moment.images) return;
+            
+            currentMomentId = momentId;
+            currentMediaList = moment.images.map((url, index) => ({
+                type: 'image',
+                url: url,
+                name: `图片${index + 1}`
+            }));
+            currentMediaIndex = imageIndex;
+            
+            showMediaInViewer();
+            document.getElementById('mediaViewer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 在查看器中显示媒体
+        function showMediaInViewer() {
+            const viewerContent = document.getElementById('mediaViewerContent');
+            const counter = document.getElementById('mediaViewerCounter');
+            const prevBtn = document.querySelector('.media-viewer-prev');
+            const nextBtn = document.querySelector('.media-viewer-next');
+            
+            if (currentMediaList.length === 0) return;
+            
+            const currentMedia = currentMediaList[currentMediaIndex];
+            
+            if (currentMedia.type === 'image') {
+                viewerContent.innerHTML = `<img src="${currentMedia.url}" alt="${currentMedia.name}">`;
+            } else if (currentMedia.type === 'video') {
+                viewerContent.innerHTML = `<video src="${currentMedia.url}" controls autoplay></video>`;
+            }
+            
+            // 更新计数器
+            counter.textContent = `${currentMediaIndex + 1} / ${currentMediaList.length}`;
+            
+            // 更新导航按钮状态
+            prevBtn.style.display = currentMediaIndex > 0 ? 'flex' : 'none';
+            nextBtn.style.display = currentMediaIndex < currentMediaList.length - 1 ? 'flex' : 'none';
+        }
+
+        // 显示上一个媒体
+        function showPrevMedia() {
+            if (currentMediaIndex > 0) {
+                currentMediaIndex--;
+                showMediaInViewer();
+            }
+        }
+
+        // 显示下一个媒体
+        function showNextMedia() {
+            if (currentMediaIndex < currentMediaList.length - 1) {
+                currentMediaIndex++;
+                showMediaInViewer();
+            }
+        }
+
+        // 关闭媒体查看器
+        function closeMediaViewer() {
+            document.getElementById('mediaViewer').classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
+            
+            // 停止视频播放
+            const video = document.querySelector('.media-viewer video');
+            if (video) {
+                video.pause();
+            }
+            
+            // 清空内容
+            document.getElementById('mediaViewerContent').innerHTML = '';
+            currentMediaList = [];
+            currentMediaIndex = 0;
+            currentMomentId = null;
+        }
+
+        // 键盘导航支持
+        document.addEventListener('keydown', function(event) {
+            if (!document.getElementById('mediaViewer').classList.contains('active')) return;
+            
+            switch(event.key) {
+                case 'Escape':
+                    closeMediaViewer();
+                    break;
+                case 'ArrowLeft':
+                    showPrevMedia();
+                    break;
+                case 'ArrowRight':
+                    showNextMedia();
+                    break;
+            }
+        });
+
+        // 触摸手势支持
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        document.getElementById('mediaViewer').addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+            touchStartY = event.changedTouches[0].screenY;
+        });
+
+        document.getElementById('mediaViewer').addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            touchEndY = event.changedTouches[0].screenY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            const minSwipeDistance = 50;
+
+            // 确保是水平滑动而不是垂直滑动
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+                if (diffX > 0) {
+                    // 向左滑动，显示下一个
+                    showNextMedia();
+                } else {
+                    // 向右滑动，显示上一个
+                    showPrevMedia();
+                }
+            }
+        }
+
         // 显示通知
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
@@ -5097,4 +5633,3 @@
     </script>
 </body>
 </html> 
-
