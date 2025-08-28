@@ -1,0 +1,19 @@
+{
+  "name": "moment-app",
+  "version": "1.0.0",
+  "description": "朋友圈记录APP",
+  "main": "index.html",
+  "scripts": {
+    "build": "pwa-builder",
+    "build-apk": "bubblewrap build"
+  },
+  "dependencies": {
+    "@bubblewrap/cli": "^1.0.0"
+  },
+  "devDependencies": {
+    "@pwa/builder": "^1.0.0"
+  },
+  "keywords": ["pwa", "social", "moments"],
+  "author": "XY",
+  "license": "MIT"
+} 
