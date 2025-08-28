@@ -1,0 +1,4525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>朋友圈记录</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#90EE90">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="朋友圈">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM5MEVFOUIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMzMzMzMzIj4KPHBhdGggZD0iTTEyIDIuMDJjNS41MSAwIDkuOTggNC40NyA5Ljk4IDkuOThzLTQuNDcgOS45OC05Ljk4IDkuOTgtOS45OC00LjQ3LTkuOTgtOS45OFM2LjUxIDIuMDIgMTIgMi4wMnpNMTMgMmgtdjNoMnYtM3pNMTMgMTloLTJ2M2gydi0zek00LjM0IDE2LjI0bDEuNDItMS40MmMtLjcxLS43MS0xLjI5LTEuNjEtMS41OS0yLjU5aC0yLjAyYy4zOS0xLjM5IDEuMTktMi41OSAyLjE5LTMuNTl6Ii8+CjxwYXRoIGQ9Ik0xOS42NiA0LjM0bC0xLjQyIDEuNDJjLjcxLjcxIDEuMjkgMS42MSAxLjU5IDIuNTloMi4wMmMtLjM5IDEuMzktMS4xOSAyLjU5LTIuMTkgMy41OXoiLz4KPHBhdGggZD0iTTE5LjY2IDE5LjY2bC0xLjQyLTEuNDJjLjcxLS43MSAxLjI5LTEuNjEgMS41OS0yLjU5aDIuMDJjLS4zOSAxLjM5LTEuMTkgMi41OS0yLjE5IDMuNTl6Ii8+CjxwYXRoIGQ9Ik00LjM0IDQuMzRsMS40MiAxLjQyYy0uNzEuNzEtMS4yOSAxLjYxLTEuNTkgMi41OUgyLjE1Yy4zOS0xLjM5IDEuMTktMi41OSAyLjE5LTMuNTl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+
+        .app {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            min-height: 100vh;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: sparkle 4s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.3; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 0.6; }
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .create-moment {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
+            padding: 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .create-moment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+        }
+
+        .create-moment-input {
+            width: 100%;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-moment-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .submit-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .submit-button:disabled {
+            background: linear-gradient(135deg, #ccc 0%, #999 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .moment-item {
+            padding: 20px;
+            margin: 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .moment-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .moment-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .moment-item:hover::before {
+            opacity: 1;
+        }
+
+        .moment-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .moment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .moment-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .moment-username {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .moment-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .moment-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .moment-actions {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+        }
+
+        .action-button {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .action-button:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .action-button.liked {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+            animation: heartBeat 0.6s ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .moment-likes {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 8px;
+        }
+
+        .moment-comments {
+            padding: 8px 0;
+        }
+
+        .comment {
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .comment-username {
+            font-weight: 600;
+            color: #333;
+            margin-right: 6px;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .comment-input {
+            flex: 1;
+            border: 1px solid #e9ecef;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .comment-submit {
+            background-color: #90EE90;
+            color: #333;
+            border: none;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* 设置按钮 */
+        .settings-button {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #90EE90;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .settings-button:hover {
+            background: #90EE90;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+        }
+
+        .settings-button:active {
+            transform: translateY(0);
+        }
+
+        /* 设置面板 */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .settings-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #90EE90;
+            box-shadow: 0 0 0 2px rgba(144, 238, 144, 0.1);
+        }
+
+        .avatar-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .avatar-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .avatar-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .avatar-option.selected {
+            background-color: #e8f5e8;
+            border: 2px solid #90EE90;
+        }
+
+        .avatar-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 0 auto 4px;
+        }
+
+        .avatar-preview-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            margin: 0 auto;
+        }
+
+        .avatar-option span {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .current-avatar-preview {
+            text-align: center;
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .save-button {
+            flex: 1;
+            background-color: #90EE90;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .save-button:hover {
+            background-color: #7DCE7D;
+        }
+
+        .cancel-button {
+            flex: 1;
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .cancel-button:hover {
+            background-color: #e9ecef;
+        }
+
+        /* 背景选项样式 */
+        .background-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .background-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .background-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .background-option.selected {
+            background-color: #e8f5e8;
+            border: 2px solid #90EE90;
+        }
+
+        .background-preview {
+            width: 60px;
+            height: 40px;
+            border-radius: 8px;
+            margin: 0 auto 4px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .default-bg {
+            background-color: #f5f5f5;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .pattern-bg {
+            background-color: #f0f0f0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, #90EE90 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, #90EE90 2px, transparent 2px);
+            background-size: 20px 20px;
+        }
+
+        .background-option span {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 自定义头像和背景选项 */
+        .custom-avatar .avatar-preview,
+        .custom-bg .background-preview {
+            background-color: #f8f9fa;
+            border: 2px dashed #ccc;
+            color: #666;
+        }
+
+        .custom-avatar:hover .avatar-preview,
+        .custom-bg:hover .background-preview {
+            border-color: #90EE90;
+            background-color: #e8f5e8;
+        }
+
+        /* 下拉菜单样式 */
+        .moment-actions-dropdown {
+            position: relative;
+        }
+
+        .moment-more {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #666;
+            transition: background-color 0.2s;
+        }
+
+        .moment-more:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 120px;
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* 分享面板样式 */
+        .share-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .share-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .share-header {
+            margin-bottom: 20px;
+        }
+
+        .share-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .share-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .share-option-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .share-option-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .share-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .share-button.primary {
+            background-color: #90EE90;
+            color: #333;
+        }
+
+        .share-button.secondary {
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .share-button:hover {
+            opacity: 0.8;
+        }
+
+        /* 创建动态标签页样式 */
+        .create-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 8px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: #666;
+        }
+
+        .tab-button.active {
+            background-color: #90EE90;
+            color: #333;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 心情选择器 */
+        .mood-selector {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mood-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mood-option {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .mood-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .mood-option.selected {
+            background-color: #e8f5e8;
+        }
+
+        .mood-option[data-mood="🥰"] {
+            background-color: #e8f5e8;
+        }
+
+
+
+        /* 用户信息显示区域 */
+        .user-profile-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(144, 238, 144, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-avatar {
+            flex-shrink: 0;
+        }
+
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #90EE90, #7CFC00);
+            box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+            border: 2px solid white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .user-id {
+            font-size: 14px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .profile-action-btn {
+            background: rgba(144, 238, 144, 0.1);
+            border: 1px solid rgba(144, 238, 144, 0.3);
+            color: #333;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-action-btn:hover {
+            background: #90EE90;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+        }
+
+        .circle-button.disabled {
+            background: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed !important;
+        }
+
+        .circle-button.accept {
+            background: #90EE90 !important;
+            color: white !important;
+        }
+
+        .circle-button.accept:hover {
+            background: #7CFC00 !important;
+        }
+
+        /* 用户信息显示区域 */
+        .user-info-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(144, 238, 144, 0.1), rgba(124, 252, 0, 0.1));
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(144, 238, 144, 0.2);
+        }
+
+        .current-avatar {
+            flex-shrink: 0;
+        }
+
+        .avatar-preview-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 3px solid white;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .user-id-display {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .user-id-copy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-id-copy span {
+            background: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #90EE90, #7CFC00);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+        }
+
+        .moment-privacy {
+            font-size: 14px;
+            opacity: 0.7;
+            cursor: help;
+        }
+
+        .privacy-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            background: rgba(144, 238, 144, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(144, 238, 144, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        .stat-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 语音录制 */
+        .voice-recorder {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .voice-button {
+            background-color: #90EE90;
+            color: #333;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 32px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .voice-button.recording {
+            background-color: #ff4757;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .voice-status {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .voice-waveform {
+            margin-top: 16px;
+            height: 40px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        /* AI助手 */
+        .ai-upload-area {
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .upload-button {
+            background-color: #90EE90;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .upload-button:hover {
+            background-color: #7DCE7D;
+        }
+
+        .ai-preview {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .ai-preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .ai-generate-button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .ai-generate-button:hover {
+            background-color: #5a6fd8;
+        }
+
+        .ai-result {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* 时间胶囊 */
+        .capsule-settings {
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .capsule-settings input {
+            padding: 8px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* 动态增强显示 */
+        .moment-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .moment-mood {
+            font-size: 16px;
+        }
+
+        .moment-weather {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .moment-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .moment-type {
+            background-color: #90EE90;
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .moment-type.voice {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .moment-type.ai {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .moment-type.capsule {
+            background-color: #feca57;
+            color: #333;
+        }
+
+        /* 时间线视图 */
+        .timeline-view {
+            display: none;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #90EE90;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #90EE90;
+        }
+
+        /* 统计图表 */
+        .stats-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #90EE90;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* 圈子相关样式 */
+        .circles-view, .friends-view, .my-view {
+            display: none;
+        }
+
+        /* 我的动态样式 */
+        .my-moment-item {
+            padding: 20px;
+            margin: 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .my-moment-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            opacity: 1;
+        }
+
+        .my-moment-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+        }
+
+        .my-moment-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .my-moment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .my-moment-info h4 {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .my-moment-info p {
+            margin: 4px 0 0 0;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .my-moment-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .my-moment-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .my-moment-mood {
+            font-size: 16px;
+        }
+
+        .my-moment-weather {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .my-moment-type {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .my-moment-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .my-action-button {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .my-action-button:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .my-action-button.liked {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .my-moment-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .my-moment-date {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .circle-item {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .circle-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .circle-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #90EE90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .circle-info h4 {
+            margin: 0;
+            color: #333;
+        }
+
+        .circle-info p {
+            margin: 4px 0 0 0;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .circle-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .circle-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .circle-button {
+            background-color: #90EE90;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .circle-button:hover {
+            background-color: #7DCE7D;
+        }
+
+        .circle-button.secondary {
+            background-color: #f8f9fa;
+            color: #666;
+        }
+
+        .circle-button.secondary:hover {
+            background-color: #e9ecef;
+        }
+
+        /* 好友相关样式 */
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #90EE90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .friend-id {
+            font-size: 12px;
+            color: #666;
+            margin: 4px 0 0 0;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .secondary-button {
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .secondary-button:hover {
+            background-color: #e9ecef;
+        }
+
+        /* 动态隐私设置 */
+        .privacy-selector {
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .privacy-selector > span:first-child {
+            font-weight: 600;
+            color: #333;
+            min-width: 40px;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .privacy-option:hover {
+            border-color: #90EE90;
+            background: rgba(144, 238, 144, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .privacy-option.selected {
+            border-color: #90EE90;
+            background: #90EE90;
+            color: white;
+            box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+        }
+
+        /* 浮动装饰元素 */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatElement 15s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 6s;
+        }
+
+        .floating-element:nth-child(4) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 9s;
+        }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.3; }
+        }
+
+        /* 加载动画 */
+        .loading-animation {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 脉冲效果 */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        /* 渐变文字效果 */
+        .gradient-text {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+
+
+        /* 媒体上传样式 */
+        .media-upload-area {
+            margin: 16px 0;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .media-upload-area:hover {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .media-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .media-item:hover {
+            transform: scale(1.05);
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-item .file-icon {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .media-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .media-item .remove-btn:hover {
+            background: #ff4757;
+            transform: scale(1.1);
+        }
+
+        .media-item .file-info {
+            text-align: center;
+            padding: 8px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .media-item .file-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            word-break: break-all;
+        }
+
+        .media-item .file-size {
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        /* 动态中的媒体显示 */
+        .moment-media {
+            margin: 12px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .moment-media img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .moment-media video {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .moment-media .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 4px;
+        }
+
+        .moment-media .media-grid img,
+        .moment-media .media-grid video {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .moment-attachment {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .moment-attachment .file-icon {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .moment-attachment .file-info {
+            flex: 1;
+        }
+
+        .moment-attachment .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .moment-attachment .file-size {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .moment-attachment .download-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .moment-attachment .download-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 浮动装饰元素 -->
+    <div class="floating-elements">
+        <div class="floating-element">🌟</div>
+        <div class="floating-element">💫</div>
+        <div class="floating-element">✨</div>
+        <div class="floating-element">🎈</div>
+    </div>
+
+    <div class="app">
+        <header class="header">
+            <h1 class="header-title gradient-text">💫 朋友圈 💫</h1>
+        </header>
+
+        <div class="create-moment">
+            <!-- 用户信息显示区域 -->
+            <div class="user-profile-display">
+                <div class="user-avatar">
+                    <div id="userAvatarDisplay" class="avatar-circle"></div>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userNameDisplay">XY</div>
+                    <div class="user-id" id="userIDDisplay">ID: XY001</div>
+                </div>
+                <div class="user-actions">
+                    <button class="profile-action-btn" onclick="openSettings()" title="个人设置">
+                        ⚙️
+                    </button>
+                    <button class="profile-action-btn" onclick="openFriendsPanel()" title="好友管理">
+                        👥
+                    </button>
+                </div>
+            </div>
+            
+
+            <div class="create-tabs">
+                <button class="tab-button active" onclick="switchTab('text')">✍️ 文字</button>
+                <button class="tab-button" onclick="switchTab('voice')">🎙️ 语音</button>
+                <button class="tab-button" onclick="switchTab('ai')">🧠 AI助手</button>
+                <button class="tab-button" onclick="switchTab('capsule')">🕰️ 时间胶囊</button>
+            </div>
+            
+            <div id="textTab" class="tab-content active">
+                <textarea 
+                    class="create-moment-input" 
+                    placeholder="分享你的想法..." 
+                    id="momentContent"
+                    rows="3"
+                ></textarea>
+                
+                <!-- 媒体上传区域 -->
+                <div class="media-upload-area">
+                    <div class="upload-buttons">
+                        <button class="upload-btn" onclick="document.getElementById('imageInput').click()">
+                            📸 照片
+                        </button>
+                        <button class="upload-btn" onclick="document.getElementById('videoInput').click()">
+                            🎬 视频
+                        </button>
+                        <button class="upload-btn" onclick="document.getElementById('audioInput').click()">
+                            🎧 音乐
+                        </button>
+                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                            📎 文件
+                        </button>
+                    </div>
+                    
+                    <!-- 媒体预览区域 -->
+                    <div class="media-preview" id="mediaPreview">
+                        <!-- 上传的媒体将在这里预览 -->
+                    </div>
+                </div>
+
+                <div class="mood-selector">
+                    <span>今天的心情：</span>
+                    <div class="mood-options">
+                        <span class="mood-option" data-mood="🥰" onclick="selectMood('🥰')">🥰</span>
+                        <span class="mood-option" data-mood="😎" onclick="selectMood('😎')">😎</span>
+                        <span class="mood-option" data-mood="🤗" onclick="selectMood('🤗')">🤗</span>
+                        <span class="mood-option" data-mood="🤔" onclick="selectMood('🤔')">🤔</span>
+                        <span class="mood-option" data-mood="🥺" onclick="selectMood('🥺')">🥺</span>
+                        <span class="mood-option" data-mood="🤯" onclick="selectMood('🤯')">🤯</span>
+                    </div>
+                </div>
+                <div class="privacy-selector">
+                    <span>隐私：</span>
+                    <span class="privacy-option selected" data-privacy="friends" onclick="selectPrivacy('friends')">
+                        🤝 仅好友
+                    </span>
+                    <span class="privacy-option" data-privacy="private" onclick="selectPrivacy('private')">
+                        🛡️ 仅自己
+                    </span>
+                </div>
+                <button class="submit-button" id="submitBtn" disabled>发布</button>
+            </div>
+            
+            <div id="voiceTab" class="tab-content">
+                <div class="voice-recorder">
+                    <button class="voice-button" id="recordButton" onclick="toggleRecording()">
+                        🎙️ 点击录音
+                    </button>
+                    <div class="voice-status" id="voiceStatus"></div>
+                    <div class="voice-waveform" id="voiceWaveform"></div>
+                </div>
+                <button class="submit-button" id="voiceSubmitBtn" disabled>发布语音</button>
+            </div>
+            
+            <div id="aiTab" class="tab-content">
+                <div class="ai-upload-area">
+                    <input type="file" id="aiImageInput" accept="image/*" multiple style="display: none;" onchange="handleAIUpload(event)">
+                    <button class="upload-button" onclick="document.getElementById('aiImageInput').click()">
+                        📸 上传照片
+                    </button>
+                    <div class="ai-preview" id="aiPreview"></div>
+                </div>
+                <button class="ai-generate-button" onclick="generateAISummary()">🧠 生成AI总结</button>
+                <div class="ai-result" id="aiResult"></div>
+            </div>
+            
+            <div id="capsuleTab" class="tab-content">
+                <textarea 
+                    class="create-moment-input" 
+                    placeholder="写给未来的自己..." 
+                    id="capsuleContent"
+                    rows="3"
+                ></textarea>
+                <div class="capsule-settings">
+                    <label>🕰️ 解锁时间：</label>
+                    <input type="date" id="capsuleDate" min="">
+                    <input type="time" id="capsuleTime" value="12:00">
+                </div>
+                <button class="submit-button" id="capsuleSubmitBtn" onclick="createTimeCapsule()">创建时间胶囊</button>
+            </div>
+        </div>
+
+
+
+        <!-- 视图切换 -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; padding: 0 20px;">
+            <button class="tab-button active" onclick="switchView('list')">📝 列表</button>
+            <button class="tab-button" onclick="switchView('timeline')">📅 时间线</button>
+            <button class="tab-button" onclick="switchView('my')">👤 我的动态</button>
+            <button class="tab-button" onclick="switchView('circles')">👥 圈子</button>
+            <button class="tab-button" onclick="switchView('friends')">👫 好友</button>
+        </div>
+
+        <div id="momentsList" class="moments-view">
+            <!-- 动态内容将通过JavaScript动态生成 -->
+        </div>
+
+        <div id="timelineView" class="timeline-view">
+            <!-- 时间线内容将通过JavaScript动态生成 -->
+        </div>
+
+        <div id="circlesView" class="circles-view" style="display: none;">
+            <!-- 圈子内容将通过JavaScript动态生成 -->
+        </div>
+
+        <div id="myView" class="my-view" style="display: none;">
+            <!-- 我的动态内容将通过JavaScript动态生成 -->
+        </div>
+
+        <div id="friendsView" class="friends-view" style="display: none;">
+            <!-- 好友内容将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 设置面板 -->
+        <div id="settingsPanel" class="settings-panel">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>⚙️ 个人设置</h2>
+                    <button class="close-button" onclick="closeSettings()">×</button>
+                </div>
+                
+                <!-- 用户信息显示区域 -->
+                <div class="user-info-display">
+                    <div class="current-avatar">
+                        <div id="currentAvatarImg" class="avatar-preview-large" style="background-color: #90EE90; color: #333;">XY</div>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name-display" id="userNameDisplay">XY</div>
+                        <div class="user-id-display" id="userIdDisplay">ID: XY001</div>
+                        <div class="user-id-copy">
+                            <span id="userIDText">XY001</span>
+                            <button class="copy-btn" onclick="copyUserID()">📋 复制ID</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label for="userName">修改昵称：</label>
+                        <input type="text" id="userName" placeholder="请输入你的昵称" maxlength="20">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>头像：</label>
+                        <div class="avatar-options">
+                            <div class="avatar-option" data-color="#90EE90" onclick="selectAvatar('#90EE90')">
+                                <div class="avatar-preview" style="background-color: #90EE90; color: #333;">XY</div>
+                                <span>浅绿色</span>
+                            </div>
+                            <div class="avatar-option" data-color="#FF6B6B" onclick="selectAvatar('#FF6B6B')">
+                                <div class="avatar-preview" style="background-color: #FF6B6B; color: white;">XY</div>
+                                <span>红色</span>
+                            </div>
+                            <div class="avatar-option" data-color="#4ECDC4" onclick="selectAvatar('#4ECDC4')">
+                                <div class="avatar-preview" style="background-color: #4ECDC4; color: white;">XY</div>
+                                <span>青色</span>
+                            </div>
+                            <div class="avatar-option" data-color="#45B7D1" onclick="selectAvatar('#45B7D1')">
+                                <div class="avatar-preview" style="background-color: #45B7D1; color: white;">XY</div>
+                                <span>蓝色</span>
+                            </div>
+                            <div class="avatar-option" data-color="#96CEB4" onclick="selectAvatar('#96CEB4')">
+                                <div class="avatar-preview" style="background-color: #96CEB4; color: #333;">XY</div>
+                                <span>薄荷绿</span>
+                            </div>
+                            <div class="avatar-option" data-color="#FFEAA7" onclick="selectAvatar('#FFEAA7')">
+                                <div class="avatar-preview" style="background-color: #FFEAA7; color: #333;">XY</div>
+                                <span>黄色</span>
+                            </div>
+                            <div class="avatar-option custom-avatar" onclick="uploadAvatar()">
+                                <div class="avatar-preview">
+                                    <span style="font-size: 12px;">📷</span>
+                                </div>
+                                <span>上传图片</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>背景设置：</label>
+                        <div class="background-options">
+                            <div class="background-option" onclick="selectBackground('default')">
+                                <div class="background-preview default-bg"></div>
+                                <span>默认背景</span>
+                            </div>
+                            <div class="background-option" onclick="selectBackground('gradient')">
+                                <div class="background-preview gradient-bg"></div>
+                                <span>渐变背景</span>
+                            </div>
+                            <div class="background-option" onclick="selectBackground('pattern')">
+                                <div class="background-preview pattern-bg"></div>
+                                <span>图案背景</span>
+                            </div>
+                            <div class="background-option custom-bg" onclick="uploadBackground()">
+                                <div class="background-preview">
+                                    <span style="font-size: 12px;">📷</span>
+                                </div>
+                                <span>上传背景</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>当前头像预览：</label>
+                        <div class="current-avatar-preview">
+                            <div id="currentAvatar" class="avatar-preview-large" style="background-color: #90EE90; color: #333;">XY</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>隐私统计：</label>
+                        <div class="privacy-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">🌐</span>
+                                <span class="stat-text">公开动态：${moments.filter(m => m.user.id === currentUser.id && m.privacy === 'public').length}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🤝</span>
+                                <span class="stat-text">仅好友：${moments.filter(m => m.user.id === currentUser.id && m.privacy === 'friends').length}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🛡️</span>
+                                <span class="stat-text">仅自己：${moments.filter(m => m.user.id === currentUser.id && m.privacy === 'private').length}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>社交功能：</label>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="secondary-button" onclick="openCirclesPanel()">👥 圈子管理</button>
+                            <button class="secondary-button" onclick="openFriendsPanel()">👫 好友管理</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-actions">
+                <button class="save-button" onclick="saveSettings()">保存设置</button>
+                <button class="cancel-button" onclick="closeSettings()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 圈子管理面板 -->
+    <div id="circlesPanel" class="settings-panel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>👥 圈子管理</h3>
+                <button class="close-button" onclick="closeCirclesPanel()">×</button>
+            </div>
+            
+            <div class="circles-tabs">
+                <button class="tab-button active" onclick="switchCirclesTab('my')">我的圈子</button>
+                <button class="tab-button" onclick="switchCirclesTab('create')">创建圈子</button>
+                <button class="tab-button" onclick="switchCirclesTab('discover')">发现圈子</button>
+            </div>
+            
+            <div id="myCirclesTab" class="tab-content active">
+                <div id="myCirclesList">
+                    <!-- 我的圈子列表 -->
+                </div>
+            </div>
+            
+            <div id="createCirclesTab" class="tab-content">
+                <div class="form-group">
+                    <label>圈子名称：</label>
+                    <input type="text" id="circleName" placeholder="如：旅行爱好者">
+                </div>
+                <div class="form-group">
+                    <label>圈子描述：</label>
+                    <textarea id="circleDescription" placeholder="描述圈子的主题和规则" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>隐私设置：</label>
+                    <select id="circlePrivacy">
+                        <option value="public">公开圈子</option>
+                        <option value="private">私密圈子</option>
+                        <option value="invite">邀请制</option>
+                    </select>
+                </div>
+                <button class="save-button" onclick="createCircle()">创建圈子</button>
+            </div>
+            
+            <div id="discoverCirclesTab" class="tab-content">
+                <div id="discoverCirclesList">
+                    <!-- 发现圈子列表 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 好友管理面板 -->
+    <div id="friendsPanel" class="settings-panel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>👫 好友管理</h3>
+                <button class="close-button" onclick="closeFriendsPanel()">×</button>
+            </div>
+            
+            <div class="friends-tabs">
+                <button class="tab-button active" onclick="switchFriendsTab('friends')">我的好友</button>
+                <button class="tab-button" onclick="switchFriendsTab('requests')">好友请求</button>
+                <button class="tab-button" onclick="switchFriendsTab('search')">搜索用户</button>
+            </div>
+            
+            <div id="friendsTab" class="tab-content active">
+                <div id="friendsList">
+                    <!-- 好友列表 -->
+                </div>
+            </div>
+            
+            <div id="requestsTab" class="tab-content">
+                <div id="friendRequestsList">
+                    <!-- 好友请求列表 -->
+                </div>
+            </div>
+            
+            <div id="searchTab" class="tab-content">
+                <div class="form-group">
+                    <input type="text" id="searchUserInput" placeholder="输入用户ID或昵称搜索" onkeyup="searchUsers(event)">
+                </div>
+                <div id="searchResults">
+                    <!-- 搜索结果 -->
+                </div>
+            </div>
+        </div>
+    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分享面板 -->
+    <div id="sharePanel" class="share-panel">
+        <div class="share-content">
+            <div class="share-header">
+                <h3>分享动态</h3>
+            </div>
+            <div class="share-options">
+                <div class="share-option" onclick="shareToWeChat()">
+                    <div class="share-option-icon">💬</div>
+                    <div class="share-option-text">微信</div>
+                </div>
+                <div class="share-option" onclick="shareToQQ()">
+                    <div class="share-option-icon">🐧</div>
+                    <div class="share-option-text">QQ</div>
+                </div>
+                <div class="share-option" onclick="shareToWeibo()">
+                    <div class="share-option-icon">📱</div>
+                    <div class="share-option-text">微博</div>
+                </div>
+                <div class="share-option" onclick="copyToClipboard()">
+                    <div class="share-option-icon">📋</div>
+                    <div class="share-option-text">复制</div>
+                </div>
+                <div class="share-option" onclick="shareToSystem()">
+                    <div class="share-option-icon">📤</div>
+                    <div class="share-option-text">系统</div>
+                </div>
+                <div class="share-option" onclick="downloadAsImage()">
+                    <div class="share-option-icon">💾</div>
+                    <div class="share-option-text">保存</div>
+                </div>
+            </div>
+            <div class="share-actions">
+                <button class="share-button secondary" onclick="closeSharePanel()">取消</button>
+                <button class="share-button primary" onclick="shareApp()">分享应用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏的文件输入 -->
+    <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+    <input type="file" id="backgroundInput" accept="image/*" style="display: none;" onchange="handleBackgroundUpload(event)">
+    
+    <!-- 媒体上传输入 -->
+    <input type="file" id="imageInput" accept="image/*" multiple style="display: none;" onchange="handleImageUpload(event)">
+    <input type="file" id="videoInput" accept="video/*" style="display: none;" onchange="handleVideoUpload(event)">
+    <input type="file" id="audioInput" accept="audio/*" style="display: none;" onchange="handleAudioUpload(event)">
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.zip,.rar" style="display: none;" onchange="handleFileUpload(event)">
+
+    <script>
+        // 应用数据
+        let moments = JSON.parse(localStorage.getItem('moments')) || [];
+
+        // 时间胶囊数据
+        let timeCapsules = JSON.parse(localStorage.getItem('timeCapsules')) || [];
+
+        // 语音录制相关
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        // AI相关数据
+        let aiImages = [];
+        let selectedMood = '🥰';
+        let selectedPrivacy = 'friends';
+
+        // 媒体上传数据
+        let uploadedMedia = [];
+
+        // 用户系统数据
+        let allUsers = [];
+
+        // 好友关系数据
+        let friendships = JSON.parse(localStorage.getItem('friendships')) || {
+            friends: [], // 当前用户的好友ID列表
+            requests: [], // 收到的好友请求
+            sent: [] // 发送的好友请求
+        };
+
+        // 生成一些示例用户用于演示
+        function generateSampleUsers() {
+            if (allUsers.length === 0) {
+                const sampleNames = ['小明', '小红', '小李', '小王', '小张', '小赵', '小孙', '小周'];
+                const sampleColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
+                
+                sampleNames.forEach((name, index) => {
+                    allUsers.push({
+                        id: (index + 2).toString(), // 从2开始，因为1是当前用户
+                        name: name,
+                        userId: `${name}${String(index + 1).padStart(3, '0')}`,
+                        avatar: `https://via.placeholder.com/40/${sampleColors[index].replace('#', '')}/FFFFFF?text=${name.charAt(0)}`
+                    });
+                });
+            }
+        }
+
+        // 圈子数据
+        let circles = JSON.parse(localStorage.getItem('circles')) || [];
+
+        // 用户设置
+        let userSettings = JSON.parse(localStorage.getItem('userSettings')) || {
+            name: 'XY',
+            avatarColor: '#90EE90',
+            avatarTextColor: '#333333',
+            avatarImage: null,
+            backgroundType: 'default',
+            backgroundImage: null
+        };
+
+        const currentUser = {
+            id: '1',
+            name: userSettings.name,
+            userId: 'XY001', // 唯一用户ID
+            avatar: `https://via.placeholder.com/40/${userSettings.avatarColor.replace('#', '')}/${userSettings.avatarTextColor.replace('#', '')}?text=${userSettings.name}`
+        };
+
+        // 当前选中的头像颜色和背景类型
+        let selectedAvatarColor = userSettings.avatarColor;
+        let selectedBackgroundType = userSettings.backgroundType;
+
+        // DOM元素
+        const momentContent = document.getElementById('momentContent');
+        const submitBtn = document.getElementById('submitBtn');
+        const momentsList = document.getElementById('momentsList');
+
+        // 工具函数
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return '刚刚';
+            if (minutes < 60) return `${minutes}分钟前`;
+            if (hours < 24) return `${hours}小时前`;
+            return `${days}天前`;
+        }
+
+        function createMomentElement(moment) {
+            const isLiked = moment.likes.includes(currentUser.id);
+            const timeAgo = formatTimeAgo(moment.createdAt);
+
+            return `
+                <div class="moment-item" data-moment-id="${moment.id}">
+                    <div class="moment-header">
+                        <div class="moment-avatar" style="
+                            ${moment.user.avatar && moment.user.avatar.startsWith('data:') ? 
+                                `background-image: url('${moment.user.avatar}'); background-size: cover; background-position: center;` : 
+                                `background-image: url('${moment.user.avatar}');`
+                            }
+                        "></div>
+                        <div>
+                            <div class="moment-username">${moment.user.name}</div>
+                            <div class="moment-time">${timeAgo}</div>
+                        </div>
+                        <div class="moment-actions-dropdown">
+                            <button class="moment-more" onclick="toggleDropdown('${moment.id}')">
+                                ⋯
+                            </button>
+                            <div class="dropdown-menu" id="dropdown_${moment.id}">
+                                <button class="dropdown-item" onclick="shareMoment('${moment.id}')">
+                                    📤 分享动态
+                                </button>
+                                <button class="dropdown-item" onclick="copyMomentLink('${moment.id}')">
+                                    🔗 复制链接
+                                </button>
+                                <button class="dropdown-item" onclick="downloadMoment('${moment.id}')">
+                                    💾 保存图片
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${moment.mood || moment.weather ? `
+                        <div class="moment-meta">
+                            ${moment.mood ? `<span class="moment-mood">${moment.mood}</span>` : ''}
+                            ${moment.weather ? `<span class="moment-weather">${moment.weather}</span>` : ''}
+                            ${moment.type ? `<span class="moment-type ${moment.type}">${getTypeLabel(moment.type)}</span>` : ''}
+                        </div>
+                    ` : ''}
+
+                    <div class="moment-text">${moment.content}</div>
+
+                    ${moment.type === 'voice' && moment.audioUrl ? `
+                        <div style="margin: 12px 0;">
+                            <audio controls style="width: 100%;">
+                                <source src="${moment.audioUrl}" type="audio/wav">
+                                您的浏览器不支持音频播放。
+                            </audio>
+                        </div>
+                    ` : ''}
+
+                    ${moment.media && moment.media.length > 0 ? `
+                        <div class="moment-media">
+                            ${moment.media.length === 1 ? 
+                                // 单个媒体文件
+                                moment.media[0].type === 'image' ? 
+                                    `<img src="${moment.media[0].url}" alt="${moment.media[0].name}">` :
+                                moment.media[0].type === 'video' ? 
+                                    `<video src="${moment.media[0].url}" controls style="width: 100%;"></video>` :
+                                moment.media[0].type === 'audio' ? 
+                                    `<audio src="${moment.media[0].url}" controls style="width: 100%;"></audio>` :
+                                    `<div class="moment-attachment">
+                                        <div class="file-icon">📎</div>
+                                        <div class="file-info">
+                                            <div class="file-name">${moment.media[0].name}</div>
+                                            <div class="file-size">${moment.media[0].size}</div>
+                                        </div>
+                                        <button class="download-btn" onclick="downloadFile('${moment.media[0].url}', '${moment.media[0].name}')">下载</button>
+                                    </div>`
+                            : 
+                                // 多个媒体文件
+                                `<div class="media-grid">
+                                    ${moment.media.map(media => 
+                                        media.type === 'image' ? 
+                                            `<img src="${media.url}" alt="${media.name}">` :
+                                        media.type === 'video' ? 
+                                            `<video src="${media.url}" controls></video>` :
+                                            `<div class="moment-attachment">
+                                                <div class="file-icon">${media.type === 'audio' ? '🎧' : '📎'}</div>
+                                                <div class="file-info">
+                                                    <div class="file-name">${media.name}</div>
+                                                    <div class="file-size">${media.size}</div>
+                                                </div>
+                                                <button class="download-btn" onclick="downloadFile('${media.url}', '${media.name}')">下载</button>
+                                            </div>`
+                                    ).join('')}
+                                </div>`
+                            }
+                        </div>
+                    ` : ''}
+
+                    ${moment.images && moment.images.length > 0 ? `
+                        <div class="moment-images">
+                            ${moment.images.map(image => `
+                                <img src="${image}" alt="图片" class="moment-image">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="moment-actions">
+                        <button class="action-button ${isLiked ? 'liked' : ''}" onclick="handleLike('${moment.id}')">
+                            ❤️ ${moment.likes.length > 0 ? moment.likes.length : ''}
+                        </button>
+                        
+                        <button class="action-button" onclick="toggleCommentInput('${moment.id}')">
+                            💬 ${moment.comments.length > 0 ? moment.comments.length : ''}
+                        </button>
+                        
+                        <button class="action-button" onclick="shareMoment('${moment.id}')">
+                            📤
+                        </button>
+                    </div>
+
+                    ${moment.likes.length > 0 ? `
+                        <div class="moment-likes">
+                            <span>❤️ ${moment.likes.length} 人觉得很赞</span>
+                        </div>
+                    ` : ''}
+
+                    ${moment.comments.length > 0 ? `
+                        <div class="moment-comments">
+                            ${moment.comments.map(comment => `
+                                <div class="comment">
+                                    <span class="comment-username">${comment.user.name}</span>
+                                    <span>${comment.content}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="comment-input-container" id="commentInput_${moment.id}" style="display: none;">
+                        <input type="text" placeholder="写评论..." class="comment-input" id="commentText_${moment.id}">
+                        <button class="comment-submit" onclick="handleComment('${moment.id}')">发送</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMoments() {
+            // 根据隐私设置过滤动态
+            const visibleMoments = moments.filter(moment => {
+                // 自己的动态总是可见
+                if (moment.user.id === currentUser.id) {
+                    return true;
+                }
+                
+                // 检查动态的隐私设置
+                if (moment.privacy === 'private') {
+                    // 仅自己可见的动态，只有发布者能看到
+                    return moment.user.id === currentUser.id;
+                } else if (moment.privacy === 'friends') {
+                    // 仅好友可见的动态，需要是好友关系
+                    return friendships.friends.includes(moment.user.id);
+                } else {
+                    // 公开动态，所有人都能看到
+                    return true;
+                }
+            });
+            
+            momentsList.innerHTML = visibleMoments.map(moment => createMomentElement(moment)).join('');
+        }
+
+        // 保存动态到本地存储
+        function saveMoments() {
+            localStorage.setItem('moments', JSON.stringify(moments));
+        }
+
+        // 事件处理函数
+        function handleLike(momentId) {
+            const moment = moments.find(m => m.id === momentId);
+            if (moment) {
+                const isLiked = moment.likes.includes(currentUser.id);
+                if (isLiked) {
+                    moment.likes = moment.likes.filter(id => id !== currentUser.id);
+                } else {
+                    moment.likes.push(currentUser.id);
+                }
+                saveMoments(); // 保存到本地存储
+                renderMoments();
+            }
+        }
+
+        function toggleCommentInput(momentId) {
+            const commentInput = document.getElementById(`commentInput_${momentId}`);
+            commentInput.style.display = commentInput.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function handleComment(momentId) {
+            const commentText = document.getElementById(`commentText_${momentId}`);
+            const content = commentText.value.trim();
+            
+            if (content) {
+                const moment = moments.find(m => m.id === momentId);
+                if (moment) {
+                    const newComment = {
+                        id: Date.now().toString(),
+                        user: currentUser,
+                        content: content,
+                        createdAt: new Date()
+                    };
+                    moment.comments.push(newComment);
+                    saveMoments(); // 保存到本地存储
+                    commentText.value = '';
+                    document.getElementById(`commentInput_${momentId}`).style.display = 'none';
+                    renderMoments();
+                }
+            }
+        }
+
+        function handleCreateMoment(content) {
+            const newMoment = {
+                id: Date.now().toString(),
+                user: {
+                    id: currentUser.id,
+                    name: currentUser.name,
+                    avatar: userSettings.avatarImage || currentUser.avatar
+                },
+                content: content,
+                type: 'text',
+                mood: selectedMood,
+                weather: getCurrentWeather(),
+                privacy: selectedPrivacy, // 添加隐私设置
+                likes: [],
+                comments: [],
+                createdAt: new Date()
+            };
+            moments.unshift(newMoment);
+            saveMoments(); // 保存到本地存储
+            renderMoments();
+        }
+
+        // 事件监听器
+        submitBtn.addEventListener('click', () => {
+            const content = momentContent.value.trim();
+            if (content) {
+                handleCreateMoment(content);
+                momentContent.value = '';
+                submitBtn.disabled = true;
+            }
+        });
+
+        momentContent.addEventListener('input', () => {
+            submitBtn.disabled = !momentContent.value.trim();
+        });
+
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // 显示安装提示
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // 创建安装按钮
+            const installButton = document.createElement('button');
+            installButton.textContent = '📱 安装APP';
+            installButton.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #90EE90;
+                color: #333;
+                border: none;
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-size: 14px;
+                cursor: pointer;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            `;
+            
+            installButton.addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the install prompt');
+                        }
+                        deferredPrompt = null;
+                        installButton.remove();
+                    });
+                }
+            });
+            
+            document.body.appendChild(installButton);
+        });
+
+        // 设置面板功能
+        function openSettings() {
+            document.getElementById('settingsPanel').style.display = 'flex';
+            document.getElementById('userName').value = userSettings.name;
+            updateCurrentAvatar();
+            updateUserInfoDisplay();
+            
+            // 设置头像选择状态
+            if (userSettings.avatarImage) {
+                selectAvatarOption('custom');
+            } else {
+                selectAvatarOption(userSettings.avatarColor);
+            }
+            
+            // 设置背景选择状态
+            selectBackgroundOption(userSettings.backgroundType);
+        }
+
+        // 更新用户信息显示
+        function updateUserInfoDisplay() {
+            // 更新设置面板中的用户信息
+            document.getElementById('userNameDisplay').textContent = userSettings.name;
+            document.getElementById('userIdDisplay').textContent = `ID: ${currentUser.userId || 'XY001'}`;
+            document.getElementById('userIDText').textContent = currentUser.userId || 'XY001';
+            
+            // 更新页面上的用户信息显示
+            const userNameDisplay = document.querySelector('.user-profile-display .user-name');
+            const userIDDisplay = document.querySelector('.user-profile-display .user-id');
+            const userAvatarDisplay = document.querySelector('.user-profile-display .avatar-circle');
+            
+            if (userNameDisplay) {
+                userNameDisplay.textContent = userSettings.name;
+            }
+            if (userIDDisplay) {
+                userIDDisplay.textContent = `ID: ${currentUser.userId || 'XY001'}`;
+            }
+            if (userAvatarDisplay) {
+                if (userSettings.avatarImage) {
+                    userAvatarDisplay.style.backgroundImage = `url(${userSettings.avatarImage})`;
+                    userAvatarDisplay.style.backgroundSize = 'cover';
+                    userAvatarDisplay.style.backgroundPosition = 'center';
+                    userAvatarDisplay.textContent = '';
+                } else {
+                    userAvatarDisplay.style.backgroundImage = 'none';
+                    userAvatarDisplay.style.background = `linear-gradient(135deg, ${userSettings.avatarColor}, ${userSettings.avatarColor}dd)`;
+                    userAvatarDisplay.textContent = userSettings.name.charAt(0);
+                }
+            }
+        }
+
+        // 复制用户ID
+        function copyUserID() {
+            const userID = currentUser.userId || 'XY001';
+            navigator.clipboard.writeText(userID).then(() => {
+                // 显示复制成功提示
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: linear-gradient(135deg, #90EE90, #7CFC00);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+                    z-index: 10000;
+                    font-weight: 500;
+                `;
+                notification.textContent = `✅ 用户ID已复制到剪贴板`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            }).catch(() => {
+                // 如果clipboard API不可用，使用传统方法
+                const textArea = document.createElement('textarea');
+                textArea.value = userID;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('用户ID已复制到剪贴板');
+            });
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsPanel').style.display = 'none';
+        }
+
+        function selectAvatar(color) {
+            selectedAvatarColor = color;
+            userSettings.avatarImage = null; // 清除自定义图片
+            updateCurrentAvatar();
+            updateUserInfoDisplay(); // 更新页面上的用户信息显示
+            selectAvatarOption(color);
+        }
+
+        function selectAvatarOption(color) {
+            // 移除所有选中状态
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 添加选中状态到当前颜色或自定义
+            if (color === 'custom') {
+                document.querySelector('.custom-avatar').classList.add('selected');
+            } else {
+                document.querySelector(`[data-color="${color}"]`).classList.add('selected');
+            }
+        }
+
+        function updateCurrentAvatar() {
+            const currentAvatar = document.getElementById('currentAvatar');
+            const userName = document.getElementById('userName').value || userSettings.name;
+            
+            if (userSettings.avatarImage) {
+                // 使用自定义图片
+                currentAvatar.style.backgroundImage = `url(${userSettings.avatarImage})`;
+                currentAvatar.style.backgroundSize = 'cover';
+                currentAvatar.style.backgroundPosition = 'center';
+                currentAvatar.style.backgroundColor = 'transparent';
+                currentAvatar.textContent = '';
+            } else {
+                // 使用颜色头像
+                const textColor = getTextColor(selectedAvatarColor);
+                currentAvatar.style.backgroundImage = 'none';
+                currentAvatar.style.backgroundColor = selectedAvatarColor;
+                currentAvatar.style.color = textColor;
+                currentAvatar.textContent = userName;
+            }
+        }
+
+        function getTextColor(backgroundColor) {
+            // 根据背景色决定文字颜色
+            const colors = {
+                '#90EE90': '#333333', // 浅绿色 - 深色文字
+                '#FF6B6B': '#FFFFFF', // 红色 - 白色文字
+                '#4ECDC4': '#FFFFFF', // 青色 - 白色文字
+                '#45B7D1': '#FFFFFF', // 蓝色 - 白色文字
+                '#96CEB4': '#333333', // 薄荷绿 - 深色文字
+                '#FFEAA7': '#333333'  // 黄色 - 深色文字
+            };
+            return colors[backgroundColor] || '#333333';
+        }
+
+        function saveSettings() {
+            const newName = document.getElementById('userName').value.trim();
+            if (!newName) {
+                alert('请输入昵称');
+                return;
+            }
+
+            // 更新用户设置
+            userSettings.name = newName;
+            userSettings.avatarColor = selectedAvatarColor;
+            userSettings.avatarTextColor = getTextColor(selectedAvatarColor);
+            userSettings.backgroundType = selectedBackgroundType;
+
+            // 保存到本地存储
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+
+            // 更新当前用户信息
+            if (userSettings.avatarImage) {
+                currentUser.avatar = userSettings.avatarImage;
+            } else {
+                currentUser.avatar = `https://via.placeholder.com/40/${userSettings.avatarColor.replace('#', '')}/${userSettings.avatarTextColor.replace('#', '')}?text=${newName}`;
+            }
+            currentUser.name = newName;
+
+            // 更新用户信息显示
+            updateUserInfoDisplay();
+
+            // 重新渲染动态列表
+            renderMoments();
+
+            // 关闭设置面板
+            closeSettings();
+
+            // 显示成功提示
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #90EE90, #7CFC00);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+                z-index: 10000;
+                font-weight: 500;
+            `;
+            notification.textContent = `✅ 设置已保存！`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        // 监听用户名输入变化
+        document.getElementById('userName').addEventListener('input', function() {
+            updateCurrentAvatar();
+            updateUserInfoDisplay(); // 实时更新页面上的用户信息显示
+        });
+
+        // 文件上传功能
+        function uploadAvatar() {
+            document.getElementById('avatarInput').click();
+        }
+
+        function uploadBackground() {
+            document.getElementById('backgroundInput').click();
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    userSettings.avatarImage = e.target.result;
+                    updateCurrentAvatar();
+                    updateUserInfoDisplay(); // 更新页面上的用户信息显示
+                    // 移除颜色选择状态
+                    document.querySelectorAll('.avatar-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    document.querySelector('.custom-avatar').classList.add('selected');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleBackgroundUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    userSettings.backgroundImage = e.target.result;
+                    userSettings.backgroundType = 'custom';
+                    applyBackground();
+                    // 移除背景选择状态
+                    document.querySelectorAll('.background-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    document.querySelector('.custom-bg').classList.add('selected');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function selectBackground(type) {
+            selectedBackgroundType = type;
+            userSettings.backgroundType = type;
+            userSettings.backgroundImage = null;
+            applyBackground();
+            selectBackgroundOption(type);
+        }
+
+        function selectBackgroundOption(type) {
+            // 移除所有选中状态
+            document.querySelectorAll('.background-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 添加选中状态到当前类型
+            if (type === 'custom') {
+                document.querySelector('.custom-bg').classList.add('selected');
+            } else {
+                document.querySelector(`[onclick="selectBackground('${type}')"]`).classList.add('selected');
+            }
+        }
+
+        // 应用背景样式
+        function applyBackground() {
+            const app = document.querySelector('.app');
+            
+            if (userSettings.backgroundImage) {
+                app.style.backgroundImage = `url(${userSettings.backgroundImage})`;
+                app.style.backgroundSize = 'cover';
+                app.style.backgroundPosition = 'center';
+                app.style.backgroundRepeat = 'no-repeat';
+            } else {
+                app.style.backgroundImage = 'none';
+                
+                switch (userSettings.backgroundType) {
+                    case 'gradient':
+                        app.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                        break;
+                    case 'pattern':
+                        app.style.background = `
+                            #f0f0f0 url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='2' fill='%2390EE90'/%3E%3Ccircle cx='15' cy='15' r='2' fill='%2390EE90'/%3E%3C/svg%3E")
+                        `;
+                        break;
+                    default:
+                        app.style.background = '#f5f5f5';
+                }
+            }
+        }
+
+        // 分享功能
+        let currentShareMoment = null;
+
+        function toggleDropdown(momentId) {
+            const dropdown = document.getElementById(`dropdown_${momentId}`);
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            
+            // 关闭其他下拉菜单
+            allDropdowns.forEach(menu => {
+                if (menu !== dropdown) {
+                    menu.classList.remove('show');
+                }
+            });
+            
+            // 切换当前下拉菜单
+            dropdown.classList.toggle('show');
+        }
+
+        // 点击其他地方关闭下拉菜单
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.moment-actions-dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        function shareMoment(momentId) {
+            currentShareMoment = moments.find(m => m.id === momentId);
+            document.getElementById('sharePanel').style.display = 'flex';
+            // 关闭下拉菜单
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+
+        function closeSharePanel() {
+            document.getElementById('sharePanel').style.display = 'none';
+            currentShareMoment = null;
+        }
+
+        function copyMomentLink(momentId) {
+            const moment = moments.find(m => m.id === momentId);
+            const shareText = `${moment.user.name}的动态：${moment.content}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('链接已复制到剪贴板！');
+                });
+            } else {
+                // 兼容旧浏览器
+                const textArea = document.createElement('textarea');
+                textArea.value = shareText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('链接已复制到剪贴板！');
+            }
+        }
+
+        function downloadMoment(momentId) {
+            const moment = moments.find(m => m.id === momentId);
+            const shareText = `${moment.user.name}的动态：${moment.content}`;
+            
+            // 创建下载链接
+            const blob = new Blob([shareText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `动态_${moment.user.name}_${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 分享到不同平台
+        function shareToWeChat() {
+            if (currentShareMoment) {
+                const shareText = `${currentShareMoment.user.name}的动态：${currentShareMoment.content}`;
+                alert('请手动复制以下内容到微信：\n\n' + shareText);
+            }
+        }
+
+        function shareToQQ() {
+            if (currentShareMoment) {
+                const shareText = `${currentShareMoment.user.name}的动态：${currentShareMoment.content}`;
+                alert('请手动复制以下内容到QQ：\n\n' + shareText);
+            }
+        }
+
+        function shareToWeibo() {
+            if (currentShareMoment) {
+                const shareText = `${currentShareMoment.user.name}的动态：${currentShareMoment.content}`;
+                alert('请手动复制以下内容到微博：\n\n' + shareText);
+            }
+        }
+
+        function copyToClipboard() {
+            if (currentShareMoment) {
+                const shareText = `${currentShareMoment.user.name}的动态：${currentShareMoment.content}`;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('内容已复制到剪贴板！');
+                        closeSharePanel();
+                    });
+                } else {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    alert('内容已复制到剪贴板！');
+                    closeSharePanel();
+                }
+            }
+        }
+
+        function shareToSystem() {
+            if (navigator.share && currentShareMoment) {
+                const shareData = {
+                    title: `${currentShareMoment.user.name}的动态`,
+                    text: currentShareMoment.content,
+                    url: window.location.href
+                };
+                
+                navigator.share(shareData).then(() => {
+                    console.log('分享成功');
+                    closeSharePanel();
+                }).catch((error) => {
+                    console.log('分享失败:', error);
+                    alert('系统分享功能不可用，请使用其他方式分享');
+                });
+            } else {
+                alert('您的浏览器不支持系统分享功能');
+            }
+        }
+
+        function downloadAsImage() {
+            if (currentShareMoment) {
+                // 创建动态图片
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 400;
+                canvas.height = 300;
+                
+                // 设置背景
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 400, 300);
+                
+                // 设置文字样式
+                ctx.fillStyle = '#333333';
+                ctx.font = '16px Arial';
+                
+                // 绘制用户名
+                ctx.fillText(`${currentShareMoment.user.name}的动态`, 20, 40);
+                
+                // 绘制内容
+                const words = currentShareMoment.content.split('');
+                let line = '';
+                let y = 80;
+                
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + words[i];
+                    const metrics = ctx.measureText(testLine);
+                    const testWidth = metrics.width;
+                    
+                    if (testWidth > 360 && i > 0) {
+                        ctx.fillText(line, 20, y);
+                        line = words[i];
+                        y += 25;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, 20, y);
+                
+                // 下载图片
+                const link = document.createElement('a');
+                link.download = `动态_${currentShareMoment.user.name}_${new Date().toISOString().slice(0, 10)}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                closeSharePanel();
+            }
+        }
+
+        function shareApp() {
+            const appInfo = {
+                title: '朋友圈记录应用',
+                text: '一个类似微信朋友圈的记录应用，支持发布动态、点赞评论、自定义头像背景等功能！',
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(appInfo).then(() => {
+                    console.log('应用分享成功');
+                    closeSharePanel();
+                }).catch((error) => {
+                    console.log('应用分享失败:', error);
+                    alert('分享失败，请手动复制链接分享');
+                });
+            } else {
+                // 复制应用链接
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(appInfo.url).then(() => {
+                        alert('应用链接已复制到剪贴板！');
+                        closeSharePanel();
+                    });
+                } else {
+                    alert('请手动复制以下链接分享应用：\n\n' + appInfo.url);
+                    closeSharePanel();
+                }
+            }
+        }
+
+        // 标签页切换
+        function switchTab(tabName) {
+            // 隐藏所有标签页内容
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 移除所有标签按钮的active状态
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 显示选中的标签页
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // 激活对应的标签按钮
+            event.target.classList.add('active');
+        }
+
+        // 视图切换
+        function switchView(viewName) {
+            if (viewName === 'list') {
+                document.getElementById('momentsList').style.display = 'block';
+                document.getElementById('timelineView').style.display = 'none';
+            } else {
+                document.getElementById('momentsList').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'block';
+                renderTimeline();
+            }
+            
+            // 更新按钮状态
+            document.querySelectorAll('[onclick^="switchView"]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // 心情选择
+        function selectMood(mood) {
+            selectedMood = mood;
+            document.querySelectorAll('.mood-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // 语音录制
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        // 创建语音动态
+                        const newMoment = {
+                            id: Date.now().toString(),
+                            user: {
+                                id: currentUser.id,
+                                name: currentUser.name,
+                                avatar: userSettings.avatarImage || currentUser.avatar
+                            },
+                            content: '🎙️ 语音动态',
+                            type: 'voice',
+                            mood: selectedMood,
+                            weather: getCurrentWeather(),
+                            privacy: selectedPrivacy, // 添加隐私设置
+                            audioUrl: audioUrl,
+                            likes: [],
+                            comments: [],
+                            createdAt: new Date()
+                        };
+                        
+                        moments.unshift(newMoment);
+                        renderMoments();
+                        
+                        document.getElementById('voiceSubmitBtn').disabled = true;
+                        document.getElementById('voiceStatus').textContent = '';
+                    };
+                    
+                    mediaRecorder.start();
+                    isRecording = true;
+                    document.getElementById('recordButton').classList.add('recording');
+                    document.getElementById('recordButton').textContent = '⏹️ 停止录音';
+                    document.getElementById('voiceStatus').textContent = '正在录音...';
+                    
+                } catch (error) {
+                    alert('无法访问麦克风：' + error.message);
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('recordButton').classList.remove('recording');
+                                    document.getElementById('recordButton').textContent = '🎙️ 点击录音';
+                document.getElementById('voiceStatus').textContent = '录音完成！';
+                document.getElementById('voiceSubmitBtn').disabled = false;
+            }
+        }
+
+        // AI图片上传
+        function handleAIUpload(event) {
+            const files = Array.from(event.target.files);
+            aiImages = [];
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    aiImages.push(e.target.result);
+                    updateAIPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateAIPreview() {
+            const preview = document.getElementById('aiPreview');
+            preview.innerHTML = aiImages.map(img => 
+                `<img src="${img}" alt="预览">`
+            ).join('');
+        }
+
+        // AI总结生成
+        function generateAISummary() {
+            if (aiImages.length === 0) {
+                alert('请先上传照片');
+                return;
+            }
+            
+            const result = document.getElementById('aiResult');
+            result.innerHTML = '🤖 AI正在分析您的照片...';
+            
+            // 模拟AI分析
+            setTimeout(() => {
+                const summaries = [
+                    `今天您拍摄了${aiImages.length}张照片，看起来您度过了一个美好的时光！照片中充满了生活的美好瞬间，心情指数85%。`,
+                    `从您的${aiImages.length}张照片来看，今天是一个充满活力的日子！您似乎很享受当下的每一刻，心情指数90%。`,
+                    `您的${aiImages.length}张照片记录了今天的精彩瞬间，每一张都充满了故事性。今天的心情指数88%，继续保持这份美好！`,
+                    `通过分析您的${aiImages.length}张照片，AI发现您今天的心情非常不错！照片展现了生活的多样性和美好，心情指数92%。`
+                ];
+                
+                const randomSummary = summaries[Math.floor(Math.random() * summaries.length)];
+                result.innerHTML = randomSummary;
+                
+                // 创建AI动态
+                const newMoment = {
+                    id: Date.now().toString(),
+                    user: {
+                        id: currentUser.id,
+                        name: currentUser.name,
+                        avatar: userSettings.avatarImage || currentUser.avatar
+                    },
+                    content: randomSummary,
+                    type: 'ai',
+                    mood: selectedMood,
+                    weather: getCurrentWeather(),
+                    privacy: selectedPrivacy, // 添加隐私设置
+                    images: aiImages,
+                    likes: [],
+                    comments: [],
+                    createdAt: new Date()
+                };
+                
+                moments.unshift(newMoment);
+                saveMoments(); // 保存到本地存储
+                renderMoments();
+                
+                // 清空AI数据
+                aiImages = [];
+                updateAIPreview();
+                result.innerHTML = '';
+            }, 2000);
+        }
+
+        // 时间胶囊创建
+        function createTimeCapsule() {
+            const content = document.getElementById('capsuleContent').value.trim();
+            const date = document.getElementById('capsuleDate').value;
+            const time = document.getElementById('capsuleTime').value;
+            
+            if (!content || !date) {
+                alert('请填写内容和选择解锁时间');
+                return;
+            }
+            
+            const unlockDate = new Date(date + 'T' + time);
+            
+            if (unlockDate <= new Date()) {
+                alert('解锁时间必须大于当前时间');
+                return;
+            }
+            
+            const capsule = {
+                id: Date.now().toString(),
+                content: content,
+                unlockDate: unlockDate,
+                createdAt: new Date(),
+                user: {
+                    id: currentUser.id,
+                    name: currentUser.name,
+                    avatar: userSettings.avatarImage || currentUser.avatar
+                }
+            };
+            
+            timeCapsules.push(capsule);
+            localStorage.setItem('timeCapsules', JSON.stringify(timeCapsules));
+            
+            alert('时间胶囊创建成功！将在指定时间解锁。');
+            document.getElementById('capsuleContent').value = '';
+        }
+
+        // 检查时间胶囊
+        function checkTimeCapsules() {
+            const now = new Date();
+            const unlockedCapsules = timeCapsules.filter(capsule => 
+                new Date(capsule.unlockDate) <= now
+            );
+            
+            unlockedCapsules.forEach(capsule => {
+                const newMoment = {
+                    id: Date.now().toString(),
+                    user: capsule.user,
+                    content: `🕰️ 时间胶囊解锁：${capsule.content}`,
+                    type: 'capsule',
+                    mood: '🤗',
+                    weather: getCurrentWeather(),
+                    privacy: 'private', // 时间胶囊默认仅自己可见
+                    likes: [],
+                    comments: [],
+                    createdAt: new Date()
+                };
+                
+                moments.unshift(newMoment);
+                saveMoments(); // 保存到本地存储
+                
+                // 从时间胶囊列表中移除
+                timeCapsules = timeCapsules.filter(c => c.id !== capsule.id);
+                localStorage.setItem('timeCapsules', JSON.stringify(timeCapsules));
+            });
+            
+            if (unlockedCapsules.length > 0) {
+                saveMoments(); // 保存到本地存储
+                renderMoments();
+                alert(`有${unlockedCapsules.length}个时间胶囊已解锁！`);
+            }
+        }
+
+        // 获取当前天气（模拟）
+        function getCurrentWeather() {
+            const weathers = ['☀️ 晴天', '🌤️ 多云', '🌧️ 小雨', '⛅ 阴天', '🌈 彩虹'];
+            return weathers[Math.floor(Math.random() * weathers.length)];
+        }
+
+
+
+        // 渲染时间线
+        function renderTimeline() {
+            const timelineView = document.getElementById('timelineView');
+            
+            // 根据隐私设置过滤动态
+            const visibleMoments = moments.filter(moment => {
+                // 自己的动态总是可见
+                if (moment.user.id === currentUser.id) {
+                    return true;
+                }
+                
+                // 检查动态的隐私设置
+                if (moment.privacy === 'private') {
+                    // 仅自己可见的动态，只有发布者能看到
+                    return moment.user.id === currentUser.id;
+                } else if (moment.privacy === 'friends') {
+                    // 仅好友可见的动态，需要是好友关系
+                    return friendships.friends.includes(moment.user.id);
+                } else {
+                    // 公开动态，所有人都能看到
+                    return true;
+                }
+            });
+            
+            const groupedMoments = groupMomentsByDate(visibleMoments);
+            
+            timelineView.innerHTML = Object.keys(groupedMoments).map(date => `
+                <div class="timeline-item">
+                    <div style="margin-bottom: 8px; font-weight: 600; color: #333;">${formatDate(new Date(date))}</div>
+                    ${groupedMoments[date].map(moment => `
+                        <div style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span class="moment-mood">${moment.mood || '🥰'}</span>
+                                <span class="moment-type ${moment.type}">${getTypeLabel(moment.type)}</span>
+                                <span class="moment-weather">${moment.weather || '☀️ 晴天'}</span>
+                                <span class="moment-privacy" title="${getPrivacyLabel(moment.privacy)}">
+                                    ${getPrivacyIcon(moment.privacy)}
+                                </span>
+                            </div>
+                            <div style="font-size: 14px; line-height: 1.5;">${moment.content}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function groupMomentsByDate(moments) {
+            const grouped = {};
+            moments.forEach(moment => {
+                const date = new Date(moment.createdAt).toDateString();
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(moment);
+            });
+            return grouped;
+        }
+
+        function formatDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return '今天';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return '昨天';
+            } else {
+                return date.toLocaleDateString('zh-CN', { 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                'text': '文字',
+                'voice': '语音',
+                'ai': 'AI',
+                'capsule': '胶囊'
+            };
+            return labels[type] || '文字';
+        }
+
+        function getPrivacyLabel(privacy) {
+            const labels = {
+                'friends': '仅好友',
+                'private': '仅自己'
+            };
+            return labels[privacy] || '仅好友';
+        }
+
+        function getPrivacyIcon(privacy) {
+            const icons = {
+                'friends': '🤝',
+                'private': '🛡️'
+            };
+            return icons[privacy] || '🤝';
+        }
+
+        // 设置时间胶囊最小日期
+        document.getElementById('capsuleDate').min = new Date().toISOString().split('T')[0];
+
+        // 初始化渲染
+        generateSampleUsers(); // 生成示例用户
+        updateUserInfoDisplay(); // 更新用户信息显示
+        renderMoments();
+        applyBackground();
+        checkTimeCapsules();
+        
+        // 每小时检查一次时间胶囊
+        setInterval(checkTimeCapsules, 3600000);
+
+        // 添加页面加载动画
+        window.addEventListener('load', function() {
+            // 为动态项添加进入动画
+            const moments = document.querySelectorAll('.moment-item');
+            moments.forEach((moment, index) => {
+                moment.style.opacity = '0';
+                moment.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    moment.style.transition = 'all 0.6s ease';
+                    moment.style.opacity = '1';
+                    moment.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+
+        });
+
+        // 添加滚动动画
+        function addScrollAnimation() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.moment-item').forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'all 0.6s ease';
+                observer.observe(item);
+            });
+        }
+
+        // 页面滚动时触发动画
+        window.addEventListener('scroll', addScrollAnimation);
+
+        // 文件下载功能
+        function downloadFile(url, filename) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 隐私选择
+        function selectPrivacy(privacy) {
+            selectedPrivacy = privacy;
+            document.querySelectorAll('.privacy-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // 圈子管理面板
+        function openCirclesPanel() {
+            document.getElementById('circlesPanel').style.display = 'flex';
+            renderMyCircles();
+            renderDiscoverCircles();
+        }
+
+        function closeCirclesPanel() {
+            document.getElementById('circlesPanel').style.display = 'none';
+        }
+
+        function switchCirclesTab(tabName) {
+            document.querySelectorAll('#circlesPanel .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#circlesPanel .tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'CirclesTab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 好友管理面板
+        function openFriendsPanel() {
+            document.getElementById('friendsPanel').style.display = 'flex';
+            renderFriends();
+            renderFriendRequests();
+        }
+
+        function closeFriendsPanel() {
+            document.getElementById('friendsPanel').style.display = 'none';
+        }
+
+        function switchFriendsTab(tabName) {
+            document.querySelectorAll('#friendsPanel .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#friendsPanel .tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 创建圈子
+        function createCircle() {
+            const name = document.getElementById('circleName').value.trim();
+            const description = document.getElementById('circleDescription').value.trim();
+            const privacy = document.getElementById('circlePrivacy').value;
+            
+            if (!name || !description) {
+                alert('请填写圈子名称和描述');
+                return;
+            }
+            
+            const newCircle = {
+                id: Date.now().toString(),
+                name: name,
+                description: description,
+                creator: currentUser.id,
+                members: [currentUser.id],
+                privacy: privacy,
+                createdAt: new Date()
+            };
+            
+            circles.push(newCircle);
+            localStorage.setItem('circles', JSON.stringify(circles));
+            
+            alert('圈子创建成功！');
+            document.getElementById('circleName').value = '';
+            document.getElementById('circleDescription').value = '';
+            renderMyCircles();
+            renderDiscoverCircles();
+        }
+
+        // 渲染我的圈子
+        function renderMyCircles() {
+            const myCircles = circles.filter(circle => 
+                circle.members.includes(currentUser.id)
+            );
+            
+            const container = document.getElementById('myCirclesList');
+            container.innerHTML = myCircles.map(circle => `
+                <div class="circle-item">
+                    <div class="circle-header">
+                        <div class="circle-avatar">${circle.name.charAt(0)}</div>
+                        <div class="circle-info">
+                            <h4>${circle.name}</h4>
+                            <p>${circle.description}</p>
+                        </div>
+                    </div>
+                    <div class="circle-stats">
+                        <span>👥 ${circle.members.length} 成员</span>
+                        <span>📅 ${formatTimeAgo(circle.createdAt)}</span>
+                        <span>${circle.privacy === 'public' ? '🌍 公开' : '🔒 私密'}</span>
+                    </div>
+                    <div class="circle-actions">
+                        <button class="circle-button" onclick="viewCircle('${circle.id}')">查看圈子</button>
+                        ${circle.creator === currentUser.id ? 
+                            `<button class="circle-button secondary" onclick="manageCircle('${circle.id}')">管理</button>` : 
+                            `<button class="circle-button secondary" onclick="leaveCircle('${circle.id}')">退出</button>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 渲染发现圈子
+        function renderDiscoverCircles() {
+            const discoverCircles = circles.filter(circle => 
+                !circle.members.includes(currentUser.id) && circle.privacy === 'public'
+            );
+            
+            const container = document.getElementById('discoverCirclesList');
+            container.innerHTML = discoverCircles.map(circle => `
+                <div class="circle-item">
+                    <div class="circle-header">
+                        <div class="circle-avatar">${circle.name.charAt(0)}</div>
+                        <div class="circle-info">
+                            <h4>${circle.name}</h4>
+                            <p>${circle.description}</p>
+                        </div>
+                    </div>
+                    <div class="circle-stats">
+                        <span>👥 ${circle.members.length} 成员</span>
+                        <span>📅 ${formatTimeAgo(circle.createdAt)}</span>
+                        <span>🌍 公开</span>
+                    </div>
+                    <div class="circle-actions">
+                        <button class="circle-button" onclick="joinCircle('${circle.id}')">加入圈子</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 加入圈子
+        function joinCircle(circleId) {
+            const circle = circles.find(c => c.id === circleId);
+            if (circle && !circle.members.includes(currentUser.id)) {
+                circle.members.push(currentUser.id);
+                localStorage.setItem('circles', JSON.stringify(circles));
+                renderMyCircles();
+                renderDiscoverCircles();
+                alert('成功加入圈子！');
+            }
+        }
+
+        // 退出圈子
+        function leaveCircle(circleId) {
+            const circle = circles.find(c => c.id === circleId);
+            if (circle && circle.members.includes(currentUser.id)) {
+                circle.members = circle.members.filter(id => id !== currentUser.id);
+                localStorage.setItem('circles', JSON.stringify(circles));
+                renderMyCircles();
+                renderDiscoverCircles();
+                alert('已退出圈子');
+            }
+        }
+
+        // 渲染好友列表
+        function renderFriends() {
+            const friends = allUsers.filter(user => 
+                friendships.friends.includes(user.id)
+            );
+            
+            const container = document.getElementById('friendsList');
+            if (friends.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #666;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+                        <div>暂无好友</div>
+                        <div style="margin-top: 16px; font-size: 14px; color: #999;">
+                            分享你的ID给朋友：<strong>${currentUser.userId}</strong>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = friends.map(friend => `
+                    <div class="friend-item">
+                        <div class="friend-avatar">${friend.name.charAt(0)}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${friend.name}</div>
+                            <div class="friend-id">ID: ${friend.userId}</div>
+                        </div>
+                        <div class="friend-actions">
+                            <button class="circle-button secondary" onclick="viewFriendProfile('${friend.id}')">查看</button>
+                            <button class="circle-button secondary" onclick="removeFriend('${friend.id}')">删除</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 渲染好友请求
+        function renderFriendRequests() {
+            const requests = friendships.requests.map(requestId => 
+                allUsers.find(user => user.id === requestId)
+            ).filter(Boolean);
+            
+            const container = document.getElementById('friendRequestsList');
+            if (requests.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">暂无好友请求</p>';
+            } else {
+                container.innerHTML = requests.map(friend => `
+                    <div class="friend-item">
+                        <div class="friend-avatar">${friend.name.charAt(0)}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${friend.name}</div>
+                            <div class="friend-id">ID: ${friend.userId}</div>
+                        </div>
+                        <div class="friend-actions">
+                            <button class="circle-button" onclick="acceptFriendRequest('${friend.id}')">接受</button>
+                            <button class="circle-button secondary" onclick="rejectFriendRequest('${friend.id}')">拒绝</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 搜索用户
+        function searchUsers(event) {
+            if (event.key === 'Enter') {
+                const query = document.getElementById('searchUserInput').value.trim();
+                if (!query) return;
+                
+                const results = allUsers.filter(user => 
+                    user.id !== currentUser.id && 
+                    (user.name.includes(query) || user.userId.includes(query))
+                );
+                
+                const container = document.getElementById('searchResults');
+                if (results.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: #666;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+                            <div>没有找到相关用户</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = results.map(user => {
+                        const isFriend = friendships.friends.includes(user.id);
+                        const requestSent = friendships.sent.includes(user.id);
+                        const requestReceived = friendships.requests.includes(user.id);
+                        
+                        let buttonText = '添加好友';
+                        let buttonClass = 'circle-button';
+                        let buttonDisabled = false;
+                        
+                        if (isFriend) {
+                            buttonText = '已是好友';
+                            buttonClass = 'circle-button disabled';
+                            buttonDisabled = true;
+                        } else if (requestSent) {
+                            buttonText = '已发送请求';
+                            buttonClass = 'circle-button disabled';
+                            buttonDisabled = true;
+                        } else if (requestReceived) {
+                            buttonText = '接受请求';
+                            buttonClass = 'circle-button accept';
+                        }
+                        
+                        return `
+                            <div class="friend-item">
+                                <div class="friend-avatar">${user.name.charAt(0)}</div>
+                                <div class="friend-info">
+                                    <div class="friend-name">${user.name}</div>
+                                    <div class="friend-id">ID: ${user.userId}</div>
+                                </div>
+                                <div class="friend-actions">
+                                    <button class="${buttonClass}" onclick="handleFriendAction('${user.id}')" ${buttonDisabled ? 'disabled' : ''}>
+                                        ${buttonText}
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+        function handleFriendAction(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            const requestReceived = friendships.requests.includes(userId);
+            
+            if (requestReceived) {
+                acceptFriendRequest(userId);
+            } else {
+                sendFriendRequest(userId);
+            }
+        }
+
+        // 发送好友请求
+        function sendFriendRequest(userId) {
+            if (!friendships.sent.includes(userId)) {
+                friendships.sent.push(userId);
+                localStorage.setItem('friendships', JSON.stringify(friendships));
+                searchUsers({key: 'Enter'}); // 重新搜索以更新显示
+                
+                // 显示更友好的提示
+                const user = allUsers.find(u => u.id === userId);
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: linear-gradient(135deg, #90EE90, #7CFC00);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+                    z-index: 10000;
+                    font-weight: 500;
+                `;
+                notification.textContent = `✅ 已向 ${user.name} 发送好友请求`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // 接受好友请求
+        function acceptFriendRequest(userId) {
+            friendships.requests = friendships.requests.filter(id => id !== userId);
+            friendships.friends.push(userId);
+            localStorage.setItem('friendships', JSON.stringify(friendships));
+            renderFriends();
+            renderFriendRequests();
+            
+            // 重新渲染动态以显示新好友的动态
+            renderMoments();
+            
+            // 显示更友好的提示
+            const user = allUsers.find(u => u.id === userId);
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #90EE90, #7CFC00);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+                z-index: 10000;
+                font-weight: 500;
+            `;
+            notification.textContent = `🎉 已添加 ${user.name} 为好友！现在可以看到Ta的动态了`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // 拒绝好友请求
+        function rejectFriendRequest(userId) {
+            friendships.requests = friendships.requests.filter(id => id !== userId);
+            localStorage.setItem('friendships', JSON.stringify(friendships));
+            renderFriendRequests();
+        }
+
+        // 删除好友
+        function removeFriend(userId) {
+            if (confirm('确定要删除这个好友吗？删除后将无法看到Ta的动态。')) {
+                friendships.friends = friendships.friends.filter(id => id !== userId);
+                localStorage.setItem('friendships', JSON.stringify(friendships));
+                renderFriends();
+                
+                // 重新渲染动态以隐藏已删除好友的动态
+                renderMoments();
+                
+                // 显示提示
+                const user = allUsers.find(u => u.id === userId);
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+                    z-index: 10000;
+                    font-weight: 500;
+                `;
+                notification.textContent = `👋 已删除 ${user.name}，不再显示Ta的动态`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // 视图切换增强
+        function switchView(viewName) {
+            if (viewName === 'list') {
+                document.getElementById('momentsList').style.display = 'block';
+                document.getElementById('timelineView').style.display = 'none';
+                document.getElementById('myView').style.display = 'none';
+                document.getElementById('circlesView').style.display = 'none';
+                document.getElementById('friendsView').style.display = 'none';
+            } else if (viewName === 'timeline') {
+                document.getElementById('momentsList').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'block';
+                document.getElementById('myView').style.display = 'none';
+                document.getElementById('circlesView').style.display = 'none';
+                document.getElementById('friendsView').style.display = 'none';
+                renderTimeline();
+            } else if (viewName === 'my') {
+                document.getElementById('momentsList').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'none';
+                document.getElementById('myView').style.display = 'block';
+                document.getElementById('circlesView').style.display = 'none';
+                document.getElementById('friendsView').style.display = 'none';
+                renderMyMoments();
+            } else if (viewName === 'circles') {
+                document.getElementById('momentsList').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'none';
+                document.getElementById('myView').style.display = 'none';
+                document.getElementById('circlesView').style.display = 'block';
+                document.getElementById('friendsView').style.display = 'none';
+                renderCirclesView();
+            } else if (viewName === 'friends') {
+                document.getElementById('momentsList').style.display = 'none';
+                document.getElementById('timelineView').style.display = 'none';
+                document.getElementById('myView').style.display = 'none';
+                document.getElementById('circlesView').style.display = 'none';
+                document.getElementById('friendsView').style.display = 'block';
+                renderFriendsView();
+            }
+            
+            // 更新按钮状态
+            document.querySelectorAll('[onclick^="switchView"]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // 渲染圈子视图
+        function renderCirclesView() {
+            const myCircles = circles.filter(circle => 
+                circle.members.includes(currentUser.id)
+            );
+            
+            const container = document.getElementById('circlesView');
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3 style="margin: 0 0 16px 0; color: #333;">👥 我的圈子</h3>
+                    ${myCircles.map(circle => `
+                        <div class="circle-item">
+                            <div class="circle-header">
+                                <div class="circle-avatar">${circle.name.charAt(0)}</div>
+                                <div class="circle-info">
+                                    <h4>${circle.name}</h4>
+                                    <p>${circle.description}</p>
+                                </div>
+                            </div>
+                            <div class="circle-stats">
+                                <span>👥 ${circle.members.length} 成员</span>
+                                <span>📅 ${formatTimeAgo(circle.createdAt)}</span>
+                                <span>${circle.privacy === 'public' ? '🌍 公开' : '🔒 私密'}</span>
+                            </div>
+                            <div class="circle-actions">
+                                <button class="circle-button" onclick="viewCircle('${circle.id}')">查看圈子</button>
+                                <button class="circle-button secondary" onclick="shareToCircle('${circle.id}')">分享动态</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 渲染我的动态视图
+        function renderMyMoments() {
+            const myMoments = moments.filter(moment => 
+                moment.user.id === currentUser.id
+            );
+            
+            const container = document.getElementById('myView');
+            
+            if (myMoments.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 40px 20px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+                        <h3 style="margin: 0 0 8px 0; color: #333;">还没有发布过动态</h3>
+                        <p style="margin: 0; color: #666;">开始记录您的美好时光吧！</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3 style="margin: 0 0 16px 0; color: #333;" class="gradient-text">👤 我的动态回忆 (${myMoments.length})</h3>
+                    ${myMoments.map(moment => createMyMomentElement(moment)).join('')}
+                </div>
+            `;
+        }
+
+        // 创建我的动态元素
+        function createMyMomentElement(moment) {
+            const timeAgo = formatTimeAgo(moment.createdAt);
+            const isLiked = moment.likes.includes(currentUser.id);
+            const dateStr = new Date(moment.createdAt).toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            return `
+                <div class="my-moment-item">
+                    <div class="my-moment-header">
+                        <div class="my-moment-avatar">${moment.user.name.charAt(0)}</div>
+                        <div class="my-moment-info">
+                            <h4>${moment.user.name}</h4>
+                            <p>${timeAgo}</p>
+                        </div>
+                    </div>
+
+                    ${moment.mood || moment.weather ? `
+                        <div class="my-moment-meta">
+                            ${moment.mood ? `<span class="my-moment-mood">${moment.mood}</span>` : ''}
+                            ${moment.weather ? `<span class="my-moment-weather">${moment.weather}</span>` : ''}
+                            ${moment.type ? `<span class="my-moment-type">${getTypeLabel(moment.type)}</span>` : ''}
+                            ${moment.privacy ? `<span class="my-moment-privacy" title="${getPrivacyLabel(moment.privacy)}">${getPrivacyIcon(moment.privacy)}</span>` : ''}
+                        </div>
+                    ` : ''}
+
+                    <div class="my-moment-content">${moment.content}</div>
+
+                    ${moment.media && moment.media.length > 0 ? `
+                        <div class="moment-media">
+                            ${moment.media.length === 1 ? 
+                                moment.media[0].type === 'image' ? 
+                                    `<img src="${moment.media[0].url}" alt="${moment.media[0].name}">` :
+                                moment.media[0].type === 'video' ? 
+                                    `<video src="${moment.media[0].url}" controls style="width: 100%;"></video>` :
+                                moment.media[0].type === 'audio' ? 
+                                    `<audio src="${moment.media[0].url}" controls style="width: 100%;"></audio>` :
+                                    `<div class="moment-attachment">
+                                        <div class="file-icon">📎</div>
+                                        <div class="file-info">
+                                            <div class="file-name">${moment.media[0].name}</div>
+                                            <div class="file-size">${moment.media[0].size}</div>
+                                        </div>
+                                        <button class="download-btn" onclick="downloadFile('${moment.media[0].url}', '${moment.media[0].name}')">下载</button>
+                                    </div>`
+                            : 
+                                `<div class="media-grid">
+                                    ${moment.media.map(media => 
+                                        media.type === 'image' ? 
+                                            `<img src="${media.url}" alt="${media.name}">` :
+                                        media.type === 'video' ? 
+                                            `<video src="${media.url}" controls></video>` :
+                                            `<div class="moment-attachment">
+                                                <div class="file-icon">${media.type === 'audio' ? '🎧' : '📎'}</div>
+                                                <div class="file-info">
+                                                    <div class="file-name">${media.name}</div>
+                                                    <div class="file-size">${media.size}</div>
+                                                </div>
+                                                <button class="download-btn" onclick="downloadFile('${media.url}', '${media.name}')">下载</button>
+                                            </div>`
+                                    ).join('')}
+                                </div>`
+                            }
+                        </div>
+                    ` : ''}
+
+                    <div class="my-moment-actions">
+                        <button class="my-action-button ${isLiked ? 'liked' : ''}" onclick="handleLike('${moment.id}')">
+                            ❤️ ${moment.likes.length > 0 ? moment.likes.length : ''}
+                        </button>
+                        <button class="my-action-button" onclick="toggleCommentInput('${moment.id}')">
+                            💬 ${moment.comments.length > 0 ? moment.comments.length : ''}
+                        </button>
+                        <button class="my-action-button" onclick="shareMoment('${moment.id}')">
+                            📤 分享
+                        </button>
+                        <button class="my-action-button" onclick="editMoment('${moment.id}')">
+                            ✏️ 编辑
+                        </button>
+                    </div>
+
+                    <div class="my-moment-stats">
+                        <span class="my-moment-date">📅 ${dateStr}</span>
+                        <span>👁️ ${moment.views || 0} 次浏览</span>
+                        <span>🔒 ${moment.privacy === 'public' ? '公开' : moment.privacy === 'friends' ? '仅好友' : '仅自己'}</span>
+                    </div>
+
+                    ${moment.comments && moment.comments.length > 0 ? `
+                        <div class="moment-comments" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(102, 126, 234, 0.2);">
+                            ${moment.comments.map(comment => `
+                                <div class="comment">
+                                    <span class="comment-username">${comment.user.name}</span>
+                                    <span>${comment.content}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // 编辑动态功能
+        function editMoment(momentId) {
+            const moment = moments.find(m => m.id === momentId);
+            if (moment && moment.user.id === currentUser.id) {
+                // 这里可以添加编辑功能
+                alert('编辑功能开发中...');
+            }
+        }
+
+        // 渲染好友视图
+        function renderFriendsView() {
+            const friends = allUsers.filter(user => 
+                friendships.friends.includes(user.id)
+            );
+            
+            const container = document.getElementById('friendsView');
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3 style="margin: 0 0 16px 0; color: #333;">👫 我的好友 (${friends.length})</h3>
+                    ${friends.length === 0 ? `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">👥</div>
+                            <div>还没有好友，快去添加吧！</div>
+                            <button class="quick-friends-btn" onclick="openFriendsPanel()" style="margin-top: 16px;">
+                                👫 添加好友
+                            </button>
+                        </div>
+                    ` : friends.map(friend => `
+                        <div class="friend-item">
+                            <div class="friend-avatar">${friend.name.charAt(0)}</div>
+                            <div class="friend-info">
+                                <div class="friend-name">${friend.name}</div>
+                                <div class="friend-id">ID: ${friend.userId}</div>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="circle-button secondary" onclick="viewFriendProfile('${friend.id}')">查看资料</button>
+                                <button class="circle-button secondary" onclick="chatWithFriend('${friend.id}')">聊天</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 媒体上传处理函数
+        function handleImageUpload(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const mediaItem = {
+                        id: Date.now().toString() + Math.random(),
+                        type: 'image',
+                        url: e.target.result,
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        file: file
+                    };
+                    uploadedMedia.push(mediaItem);
+                    updateMediaPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const mediaItem = {
+                        id: Date.now().toString() + Math.random(),
+                        type: 'video',
+                        url: e.target.result,
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        file: file
+                    };
+                    uploadedMedia.push(mediaItem);
+                    updateMediaPreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleAudioUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const mediaItem = {
+                        id: Date.now().toString() + Math.random(),
+                        type: 'audio',
+                        url: e.target.result,
+                        name: file.name,
+                        size: formatFileSize(file.size),
+                        file: file
+                    };
+                    uploadedMedia.push(mediaItem);
+                    updateMediaPreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const mediaItem = {
+                    id: Date.now().toString() + Math.random(),
+                    type: 'file',
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    file: file
+                };
+                uploadedMedia.push(mediaItem);
+                updateMediaPreview();
+            }
+        }
+
+        function updateMediaPreview() {
+            const preview = document.getElementById('mediaPreview');
+            preview.innerHTML = uploadedMedia.map(media => {
+                if (media.type === 'image') {
+                    return `
+                        <div class="media-item">
+                            <img src="${media.url}" alt="${media.name}">
+                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                        </div>
+                    `;
+                } else if (media.type === 'video') {
+                    return `
+                        <div class="media-item">
+                            <video src="${media.url}" muted></video>
+                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                        </div>
+                    `;
+                } else if (media.type === 'audio') {
+                    return `
+                        <div class="media-item">
+                            <div class="file-icon">🎧</div>
+                            <div class="file-info">
+                                <div class="file-name">${media.name}</div>
+                                <div class="file-size">${media.size}</div>
+                            </div>
+                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="media-item">
+                            <div class="file-icon">📎</div>
+                            <div class="file-info">
+                                <div class="file-name">${media.name}</div>
+                                <div class="file-size">${media.size}</div>
+                            </div>
+                            <button class="remove-btn" onclick="removeMedia('${media.id}')">×</button>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function removeMedia(mediaId) {
+            uploadedMedia = uploadedMedia.filter(media => media.id !== mediaId);
+            updateMediaPreview();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 更新动态创建函数，支持隐私设置和媒体
+        function handleCreateMoment(content) {
+            const newMoment = {
+                id: Date.now().toString(),
+                user: {
+                    id: currentUser.id,
+                    name: currentUser.name,
+                    avatar: userSettings.avatarImage || currentUser.avatar
+                },
+                content: content,
+                type: 'text',
+                mood: selectedMood,
+                weather: getCurrentWeather(),
+                privacy: selectedPrivacy,
+                media: [...uploadedMedia], // 复制媒体数组
+                likes: [],
+                comments: [],
+                createdAt: new Date()
+            };
+            moments.unshift(newMoment);
+            saveMoments(); // 保存到本地存储
+            
+            // 清空媒体数组
+            uploadedMedia = [];
+            updateMediaPreview();
+            
+            renderMoments();
+        }
+    </script>
+</body>
+</html> 
