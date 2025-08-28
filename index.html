@@ -183,6 +183,30 @@
             animation: gradientShift 3s ease-in-out infinite;
         }
 
+        /* 标题动态背景 */
+        .header-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 140%;
+            border-radius: 16px;
+            z-index: -1;
+            background: linear-gradient(120deg, rgba(255,255,255,0.28) 0%, rgba(144,238,144,0.35) 20%, rgba(84,160,255,0.35) 40%, rgba(255,159,243,0.35) 60%, rgba(254,202,87,0.35) 80%, rgba(255,255,255,0.28) 100%);
+            background-size: 200% 200%;
+            filter: blur(8px) saturate(120%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            animation: titleBgFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes titleBgFlow {
+            0% { background-position: 0% 50%; opacity: 0.85; }
+            50% { background-position: 100% 50%; opacity: 1; }
+            100% { background-position: 0% 50%; opacity: 0.85; }
+        }
+
         .create-moment {
             background: #ffffff;
             padding: 16px 20px;
@@ -3515,26 +3539,11 @@
                     console.error('找不到mainApp元素');
                 }
                 
-                // 初始化应用
+                // 初始化应用：直接进入主界面，不显示中间层
                 console.log('开始初始化应用...');
                 try {
-                    // 先显示欢迎界面
-                    mainApp.innerHTML = `
-                        <div style="padding: 20px; text-align: center; background: white; border-radius: 10px; margin: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                            <h1 style="color: #90EE90; margin-bottom: 20px;">🎉 登录成功！</h1>
-                            <p style="font-size: 18px; margin-bottom: 10px;">欢迎回来，${currentUser ? currentUser.name : '用户'}！</p>
-                            <p style="color: #666; margin-bottom: 20px;">您的用户ID: ${currentUser ? currentUser.userId : '未知'}</p>
-                            <div style="display: flex; gap: 10px; justify-content: center;">
-                                <button onclick="showMainInterface()" style="padding: 10px 20px; background: #90EE90; border: none; border-radius: 5px; cursor: pointer; color: white;">
-                                    进入应用
-                                </button>
-                                <button onclick="logout()" style="padding: 10px 20px; background: #ff6b6b; border: none; border-radius: 5px; cursor: pointer; color: white;">
-                                    退出登录
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    console.log('欢迎界面显示完成！');
+                    initializeApp();
+                    console.log('应用初始化完成，主界面已显示！');
                 } catch (error) {
                     console.error('初始化失败:', error);
                     mainApp.innerHTML = `
@@ -3592,156 +3601,7 @@
         function showMainInterface() {
             console.log('显示主界面...');
             try {
-                // 恢复原始的主应用HTML结构
-                const mainApp = document.getElementById('mainApp');
-                mainApp.innerHTML = `
-                    <header class="header">
-                        <h1 class="header-title gradient-text">🌈 朋友圈 🎨</h1>
-                    </header>
-
-                    <div class="create-moment">
-                        <!-- 用户信息显示区域 -->
-                        <div class="user-profile-display">
-                            <div class="user-avatar">
-                                <div id="userAvatarDisplay" class="avatar-circle"></div>
-                            </div>
-                            <div class="user-info">
-                                <div class="user-name" id="userNameDisplay">${currentUser ? currentUser.name : '用户'}</div>
-                                <div class="user-id" id="userIDDisplay">ID: ${currentUser ? currentUser.userId : '未知'}</div>
-                            </div>
-                            <div class="user-actions">
-                                <button class="profile-action-btn" onclick="openSettings()" title="个人设置">
-                                    ⚙️
-                                </button>
-                                <button class="profile-action-btn" onclick="openFriendsPanel()" title="好友管理">
-                                    👥
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="create-tabs">
-                            <button class="tab-button active" onclick="switchTab('text')">✍️ 文字</button>
-                            <button class="tab-button" onclick="switchTab('voice')">🎙️ 语音</button>
-                            <button class="tab-button" onclick="switchTab('ai')">🧠 AI助手</button>
-                            <button class="tab-button" onclick="switchTab('capsule')">🕰️ 时间胶囊</button>
-                        </div>
-                        
-                        <div id="textTab" class="tab-content active">
-                            <textarea 
-                                class="create-moment-input" 
-                                placeholder="分享你的想法..." 
-                                id="momentContent"
-                                rows="3"
-                            ></textarea>
-                            
-                            <div class="mood-selector">
-                                <span>今天的心情：</span>
-                                <div class="mood-options">
-                                    <span class="mood-option selected" data-mood="🥰" onclick="selectMood('🥰')">🥰</span>
-                                    <span class="mood-option" data-mood="😎" onclick="selectMood('😎')">😎</span>
-                                    <span class="mood-option" data-mood="🤗" onclick="selectMood('🤗')">🤗</span>
-                                    <span class="mood-option" data-mood="🤔" onclick="selectMood('🤔')">🤔</span>
-                                    <span class="mood-option" data-mood="🥺" onclick="selectMood('🥺')">🥺</span>
-                                    <span class="mood-option" data-mood="🤯" onclick="selectMood('🤯')">🤯</span>
-                                </div>
-                            </div>
-                            <div class="privacy-selector">
-                                <span>隐私：</span>
-                                <span class="privacy-option selected" data-privacy="friends" onclick="selectPrivacy('friends')">
-                                    🤝 仅好友
-                                </span>
-                                <span class="privacy-option" data-privacy="private" onclick="selectPrivacy('private')">
-                                    🛡️ 仅自己
-                                </span>
-                            </div>
-                            <button class="submit-button" id="submitBtn" onclick="handleCreateMoment()">发布</button>
-                        </div>
-                        
-                        <div id="voiceTab" class="tab-content">
-                            <div class="voice-recorder">
-                                <button class="voice-button" id="recordButton" onclick="toggleRecording()">
-                                    🎙️ 点击录音
-                                </button>
-                                <div class="voice-status" id="voiceStatus"></div>
-                                <div class="voice-waveform" id="voiceWaveform"></div>
-                            </div>
-                            <button class="submit-button" id="voiceSubmitBtn" disabled>发布语音</button>
-                        </div>
-                        
-                        <div id="aiTab" class="tab-content">
-                            <div class="ai-upload-area">
-                                <input type="file" id="aiImageInput" accept="image/*" multiple style="display: none;" onchange="handleAIUpload(event)">
-                                <button class="upload-button" onclick="document.getElementById('aiImageInput').click()">
-                                    📸 上传照片
-                                </button>
-                                <div class="ai-preview" id="aiPreview"></div>
-                            </div>
-                            <button class="ai-generate-button" onclick="generateAISummary()">🧠 生成AI总结</button>
-                            <div class="ai-result" id="aiResult"></div>
-                        </div>
-                        
-                        <div id="capsuleTab" class="tab-content">
-                            <textarea 
-                                class="create-moment-input" 
-                                placeholder="写给未来的自己..." 
-                                id="capsuleContent"
-                                rows="3"
-                            ></textarea>
-                            <div class="capsule-settings">
-                                <label>🕰️ 解锁时间：</label>
-                                <input type="date" id="capsuleDate" min="">
-                                <input type="time" id="capsuleTime" value="12:00">
-                            </div>
-                            <button class="submit-button" id="capsuleSubmitBtn" onclick="createTimeCapsule()">创建时间胶囊</button>
-                        </div>
-                    </div>
-
-                    <!-- 底部导航栏 -->
-                    <div class="bottom-nav">
-                        <div class="nav-item active" onclick="switchView('list')">
-                            <div class="nav-icon">🏠</div>
-                            <div class="nav-label">首页</div>
-                        </div>
-                        <div class="nav-item" onclick="switchView('timeline')">
-                            <div class="nav-icon">📅</div>
-                            <div class="nav-label">时间线</div>
-                        </div>
-                        <div class="nav-item" onclick="switchView('my')">
-                            <div class="nav-icon">👤</div>
-                            <div class="nav-label">我的</div>
-                        </div>
-                        <div class="nav-item" onclick="switchView('circles')">
-                            <div class="nav-icon">👥</div>
-                            <div class="nav-label">圈子</div>
-                        </div>
-                        <div class="nav-item" onclick="switchView('friends')">
-                            <div class="nav-icon">👫</div>
-                            <div class="nav-label">好友</div>
-                        </div>
-                    </div>
-
-                    <div id="momentsList" class="moments-view">
-                        <!-- 动态内容将通过JavaScript动态生成 -->
-                    </div>
-
-                    <div id="timelineView" class="timeline-view">
-                        <!-- 时间线内容将通过JavaScript动态生成 -->
-                    </div>
-
-                    <div id="circlesView" class="circles-view" style="display: none;">
-                        <!-- 圈子内容将通过JavaScript动态生成 -->
-                    </div>
-
-                    <div id="myView" class="my-view" style="display: none;">
-                        <!-- 我的动态内容将通过JavaScript动态生成 -->
-                    </div>
-
-                    <div id="friendsView" class="friends-view" style="display: none;">
-                        <!-- 好友内容将通过JavaScript动态生成 -->
-                    </div>
-                `;
-                
-                // 调用初始化函数
+                // 直接调用初始化函数，使用原来的HTML结构
                 initializeApp();
                 console.log('主界面初始化完成！');
             } catch (error) {
