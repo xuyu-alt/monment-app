@@ -2359,10 +2359,43 @@
 
     <script>
         // 应用数据
-        let moments = JSON.parse(localStorage.getItem('moments')) || [];
+        let moments = [];
+        const savedMoments = localStorage.getItem('moments');
+        if (savedMoments) {
+            try {
+                const parsed = JSON.parse(savedMoments);
+                // 确保时间字段是Date对象
+                moments = parsed.map(moment => ({
+                    ...moment,
+                    createdAt: new Date(moment.createdAt),
+                    comments: moment.comments ? moment.comments.map(comment => ({
+                        ...comment,
+                        createdAt: new Date(comment.createdAt)
+                    })) : []
+                }));
+            } catch (e) {
+                console.error('解析动态数据失败:', e);
+                moments = [];
+            }
+        }
 
         // 时间胶囊数据
-        let timeCapsules = JSON.parse(localStorage.getItem('timeCapsules')) || [];
+        let timeCapsules = [];
+        const savedCapsules = localStorage.getItem('timeCapsules');
+        if (savedCapsules) {
+            try {
+                const parsed = JSON.parse(savedCapsules);
+                // 确保时间字段是Date对象
+                timeCapsules = parsed.map(capsule => ({
+                    ...capsule,
+                    createdAt: new Date(capsule.createdAt),
+                    unlockDate: new Date(capsule.unlockDate)
+                }));
+            } catch (e) {
+                console.error('解析时间胶囊数据失败:', e);
+                timeCapsules = [];
+            }
+        }
 
         // 语音录制相关
         let mediaRecorder = null;
@@ -2435,8 +2468,10 @@
 
         // 工具函数
         function formatTimeAgo(date) {
+            // 确保date是Date对象
+            const dateObj = date instanceof Date ? date : new Date(date);
             const now = new Date();
-            const diff = now - date;
+            const diff = now - dateObj;
             const minutes = Math.floor(diff / 60000);
             const hours = Math.floor(diff / 3600000);
             const days = Math.floor(diff / 86400000);
@@ -2444,7 +2479,9 @@
             if (minutes < 1) return '刚刚';
             if (minutes < 60) return `${minutes}分钟前`;
             if (hours < 24) return `${hours}小时前`;
-            return `${days}天前`;
+            if (days < 30) return `${days}天前`;
+            if (days < 365) return `${Math.floor(days / 30)}个月前`;
+            return `${Math.floor(days / 365)}年前`;
         }
 
         function createMomentElement(moment) {
@@ -3642,6 +3679,11 @@
         renderMoments();
         applyBackground();
         checkTimeCapsules();
+        
+        // 每分钟更新时间显示
+        setInterval(() => {
+            renderMoments();
+        }, 60000);
         
         // 每小时检查一次时间胶囊
         setInterval(checkTimeCapsules, 3600000);
