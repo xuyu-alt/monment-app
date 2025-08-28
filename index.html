@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -690,6 +692,11 @@
 
         .dropdown-item:hover {
             background-color: #f8f9fa;
+        }
+
+        .dropdown-item.delete-btn:hover {
+            background-color: #ffebee;
+            color: #d32f2f;
         }
 
         .dropdown-item:not(:last-child) {
@@ -2295,7 +2302,7 @@
             
             <div id="searchTab" class="tab-content">
                 <div class="form-group">
-                    <input type="text" id="searchUserInput" placeholder="输入用户ID或昵称搜索" onkeyup="searchUsers(event)">
+                    <input type="text" id="searchUserInput" placeholder="输入用户ID或昵称搜索" oninput="searchUsers(event)" onkeyup="searchUsers(event)">
                 </div>
                 <div id="searchResults">
                     <!-- 搜索结果 -->
@@ -2422,19 +2429,24 @@
 
         // 生成一些示例用户用于演示
         function generateSampleUsers() {
-            if (allUsers.length === 0) {
-                const sampleNames = ['小明', '小红', '小李', '小王', '小张', '小赵', '小孙', '小周'];
-                const sampleColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
-                
-                sampleNames.forEach((name, index) => {
-                    allUsers.push({
-                        id: (index + 2).toString(), // 从2开始，因为1是当前用户
-                        name: name,
-                        userId: `${name}${String(index + 1).padStart(3, '0')}`,
-                        avatar: `https://via.placeholder.com/40/${sampleColors[index].replace('#', '')}/FFFFFF?text=${name.charAt(0)}`
-                    });
+            // 总是生成示例用户，确保搜索功能正常工作
+            const sampleNames = ['小明', '小红', '小李', '小王', '小张', '小赵', '小孙', '小周'];
+            const sampleColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
+            
+            // 清空现有用户（除了当前用户）
+            allUsers = [currentUser];
+            
+            sampleNames.forEach((name, index) => {
+                allUsers.push({
+                    id: (index + 2).toString(), // 从2开始，因为1是当前用户
+                    name: name,
+                    userId: `${name}${String(index + 1).padStart(3, '0')}`,
+                    avatar: `https://via.placeholder.com/40/${sampleColors[index].replace('#', '')}/FFFFFF?text=${name.charAt(0)}`
                 });
-            }
+            });
+            
+            // 保存到localStorage
+            localStorage.setItem('allUsers', JSON.stringify(allUsers));
         }
 
         // 圈子数据
@@ -2515,6 +2527,11 @@
                                 <button class="dropdown-item" onclick="downloadMoment('${moment.id}')">
                                     💾 保存图片
                                 </button>
+                                ${moment.user.id === currentUser.id ? `
+                                    <button class="dropdown-item delete-btn" onclick="deleteMoment('${moment.id}')">
+                                        🗑️ 删除动态
+                                    </button>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -2692,6 +2709,40 @@
                     commentText.value = '';
                     document.getElementById(`commentInput_${momentId}`).style.display = 'none';
                     renderMoments();
+                }
+            }
+        }
+
+        // 删除动态
+        function deleteMoment(momentId) {
+            const moment = moments.find(m => m.id === momentId);
+            if (moment && moment.user.id === currentUser.id) {
+                if (confirm('确定要删除这条动态吗？删除后无法恢复。')) {
+                    moments = moments.filter(m => m.id !== momentId);
+                    saveMoments(); // 保存到本地存储
+                    renderMoments();
+                    
+                    // 显示删除成功提示
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 25px;
+                        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+                        z-index: 10000;
+                        font-weight: 500;
+                    `;
+                    notification.textContent = `🗑️ 动态已删除`;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 2000);
                 }
             }
         }
@@ -3774,6 +3825,12 @@
             document.getElementById('friendsPanel').style.display = 'flex';
             renderFriends();
             renderFriendRequests();
+            
+            // 确保用户数据已加载，并显示所有用户供搜索
+            generateSampleUsers();
+            const container = document.getElementById('searchResults');
+            const allOtherUsers = allUsers.filter(user => user.id !== currentUser.id);
+            renderSearchResults(allOtherUsers, container);
         }
 
         function closeFriendsPanel() {
@@ -3969,62 +4026,83 @@
 
         // 搜索用户
         function searchUsers(event) {
-            if (event.key === 'Enter') {
-                const query = document.getElementById('searchUserInput').value.trim();
-                if (!query) return;
-                
-                const results = allUsers.filter(user => 
-                    user.id !== currentUser.id && 
-                    (user.name.includes(query) || user.userId.includes(query))
-                );
-                
-                const container = document.getElementById('searchResults');
-                if (results.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 20px; color: #666;">
-                            <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
-                            <div>没有找到相关用户</div>
+            // 支持回车搜索和实时搜索
+            if (event.key && event.key !== 'Enter') return;
+            
+            const query = document.getElementById('searchUserInput').value.trim();
+            const container = document.getElementById('searchResults');
+            
+            if (!query) {
+                // 如果搜索框为空，显示所有用户
+                const allOtherUsers = allUsers.filter(user => user.id !== currentUser.id);
+                renderSearchResults(allOtherUsers, container);
+                return;
+            }
+            
+            // 搜索逻辑：支持昵称、用户ID的模糊匹配
+            const results = allUsers.filter(user => 
+                user.id !== currentUser.id && 
+                (user.name.toLowerCase().includes(query.toLowerCase()) || 
+                 user.userId.toLowerCase().includes(query.toLowerCase()))
+            );
+            
+            renderSearchResults(results, container);
+        }
+        
+        // 渲染搜索结果
+        function renderSearchResults(results, container) {
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #666;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+                        <div>没有找到相关用户</div>
+                        <div style="margin-top: 8px; font-size: 14px; color: #999;">
+                            试试搜索：小明、小红、小李等
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = results.map(user => {
+                    const isFriend = friendships.friends.includes(user.id);
+                    const requestSent = friendships.sent.includes(user.id);
+                    const requestReceived = friendships.requests.includes(user.id);
+                    
+                    let buttonText = '添加好友';
+                    let buttonClass = 'circle-button';
+                    let buttonDisabled = false;
+                    
+                    if (isFriend) {
+                        buttonText = '已是好友';
+                        buttonClass = 'circle-button disabled';
+                        buttonDisabled = true;
+                    } else if (requestSent) {
+                        buttonText = '已发送请求';
+                        buttonClass = 'circle-button disabled';
+                        buttonDisabled = true;
+                    } else if (requestReceived) {
+                        buttonText = '接受请求';
+                        buttonClass = 'circle-button accept';
+                    }
+                    
+                    return `
+                        <div class="friend-item">
+                            <div class="friend-avatar" style="background-color: ${user.avatar.includes('placeholder') ? 
+                                user.avatar.match(/\/[A-F0-9]{6}\//)[0].replace(/\//g, '#') : 
+                                '#90EE90'}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                ${user.name.charAt(0)}
+                            </div>
+                            <div class="friend-info">
+                                <div class="friend-name">${user.name}</div>
+                                <div class="friend-id">ID: ${user.userId}</div>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="${buttonClass}" onclick="handleFriendAction('${user.id}')" ${buttonDisabled ? 'disabled' : ''}>
+                                    ${buttonText}
+                                </button>
+                            </div>
                         </div>
                     `;
-                } else {
-                    container.innerHTML = results.map(user => {
-                        const isFriend = friendships.friends.includes(user.id);
-                        const requestSent = friendships.sent.includes(user.id);
-                        const requestReceived = friendships.requests.includes(user.id);
-                        
-                        let buttonText = '添加好友';
-                        let buttonClass = 'circle-button';
-                        let buttonDisabled = false;
-                        
-                        if (isFriend) {
-                            buttonText = '已是好友';
-                            buttonClass = 'circle-button disabled';
-                            buttonDisabled = true;
-                        } else if (requestSent) {
-                            buttonText = '已发送请求';
-                            buttonClass = 'circle-button disabled';
-                            buttonDisabled = true;
-                        } else if (requestReceived) {
-                            buttonText = '接受请求';
-                            buttonClass = 'circle-button accept';
-                        }
-                        
-                        return `
-                            <div class="friend-item">
-                                <div class="friend-avatar">${user.name.charAt(0)}</div>
-                                <div class="friend-info">
-                                    <div class="friend-name">${user.name}</div>
-                                    <div class="friend-id">ID: ${user.userId}</div>
-                                </div>
-                                <div class="friend-actions">
-                                    <button class="${buttonClass}" onclick="handleFriendAction('${user.id}')" ${buttonDisabled ? 'disabled' : ''}>
-                                        ${buttonText}
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
+                }).join('');
             }
         }
 
