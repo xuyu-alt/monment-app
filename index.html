@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>朋友圈记录</title>
-    <link rel="manifest" href="/manifest.json">
+    <!-- <link rel="manifest" href="/manifest.json"> -->
     <meta name="theme-color" content="#90EE90">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19,7 +19,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             color: #333;
             min-height: 100vh;
             position: relative;
@@ -31,6 +33,13 @@
             overscroll-behavior: none;
         }
 
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
         body::before {
             content: '';
             position: fixed;
@@ -39,24 +48,63 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+                radial-gradient(2px 2px at 20% 80%, rgba(255, 255, 255, 0.8) 50%, transparent 50%),
+                radial-gradient(2px 2px at 80% 20%, rgba(255, 255, 255, 0.8) 50%, transparent 50%),
+                radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
+                radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
+                radial-gradient(2px 2px at 10% 30%, rgba(255, 255, 255, 0.7) 50%, transparent 50%),
+                radial-gradient(1px 1px at 90% 70%, rgba(255, 255, 255, 0.5) 50%, transparent 50%),
+                radial-gradient(2px 2px at 70% 10%, rgba(255, 255, 255, 0.8) 50%, transparent 50%),
+                radial-gradient(1px 1px at 30% 90%, rgba(255, 255, 255, 0.6) 50%, transparent 50%);
+            background-size: 200px 200px, 150px 150px, 100px 100px, 120px 120px, 180px 180px, 80px 80px, 160px 160px, 90px 90px;
             pointer-events: none;
             z-index: -1;
-            animation: float 20s ease-in-out infinite;
+            animation: starFloat 30s ease-in-out infinite;
+        }
+
+        @keyframes starFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-10px) rotate(90deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-5px) rotate(180deg);
+                opacity: 0.6;
+            }
+            75% { 
+                transform: translateY(-15px) rotate(270deg);
+                opacity: 0.9;
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(1deg); }
-            66% { transform: translateY(10px) rotate(-1deg); }
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1); 
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translateY(-15px) rotate(90deg) scale(1.1); 
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-8px) rotate(180deg) scale(0.9); 
+                opacity: 0.8;
+            }
+            75% { 
+                transform: translateY(-20px) rotate(270deg) scale(1.05); 
+                opacity: 0.9;
+            }
         }
 
         .app {
             max-width: 100%;
             margin: 0 auto;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             min-height: 100vh;
             position: relative;
             overflow: hidden;
@@ -2710,7 +2758,7 @@
         }
 
         .main-app.active {
-            display: block;
+            display: block !important;
         }
 
         /* 确保登录页面默认显示 */
@@ -2927,18 +2975,18 @@
         </div>
     </div>
 
-    <!-- 浮动装饰元素 -->
+    <!-- 星空装饰元素 -->
     <div class="floating-elements">
+        <div class="floating-element">⭐</div>
+        <div class="floating-element">✨</div>
         <div class="floating-element">🌟</div>
         <div class="floating-element">💫</div>
+        <div class="floating-element">⭐</div>
         <div class="floating-element">✨</div>
-        <div class="floating-element">🎈</div>
-        <div class="floating-element">🌈</div>
-        <div class="floating-element">🎨</div>
-        <div class="floating-element">🎭</div>
-        <div class="floating-element">🎪</div>
-        <div class="floating-element">🎯</div>
-        <div class="floating-element">🎲</div>
+        <div class="floating-element">🌟</div>
+        <div class="floating-element">💫</div>
+        <div class="floating-element">⭐</div>
+        <div class="floating-element">✨</div>
     </div>
 
     <div class="app main-app" id="mainApp">
@@ -3435,20 +3483,76 @@
         // 显示主应用
         function showMainApp() {
             console.log('显示主应用...');
-            const authContainer = document.getElementById('authContainer');
-            const mainApp = document.getElementById('mainApp');
             
-            if (authContainer) {
-                authContainer.style.display = 'none';
-                console.log('隐藏登录页面');
+            try {
+                const authContainer = document.getElementById('authContainer');
+                const mainApp = document.getElementById('mainApp');
+                
+                console.log('authContainer元素:', authContainer);
+                console.log('mainApp元素:', mainApp);
+                
+                if (authContainer) {
+                    authContainer.style.display = 'none';
+                    authContainer.style.visibility = 'hidden';
+                    authContainer.style.opacity = '0';
+                    authContainer.style.zIndex = '-1';
+                    console.log('隐藏登录页面');
+                } else {
+                    console.error('找不到authContainer元素');
+                }
+                
+                if (mainApp) {
+                    mainApp.classList.add('active');
+                    mainApp.style.display = 'block';
+                    mainApp.style.visibility = 'visible';
+                    mainApp.style.opacity = '1';
+                    mainApp.style.zIndex = '9999';
+                    mainApp.style.position = 'relative';
+                    console.log('显示主应用');
+                    console.log('mainApp的classList:', mainApp.classList);
+                    console.log('mainApp的style:', mainApp.style.display);
+                } else {
+                    console.error('找不到mainApp元素');
+                }
+                
+                // 初始化应用
+                console.log('开始初始化应用...');
+                try {
+                    // 先显示欢迎界面
+                    mainApp.innerHTML = `
+                        <div style="padding: 20px; text-align: center; background: white; border-radius: 10px; margin: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <h1 style="color: #90EE90; margin-bottom: 20px;">🎉 登录成功！</h1>
+                            <p style="font-size: 18px; margin-bottom: 10px;">欢迎回来，${currentUser ? currentUser.name : '用户'}！</p>
+                            <p style="color: #666; margin-bottom: 20px;">您的用户ID: ${currentUser ? currentUser.userId : '未知'}</p>
+                            <div style="display: flex; gap: 10px; justify-content: center;">
+                                <button onclick="showMainInterface()" style="padding: 10px 20px; background: #90EE90; border: none; border-radius: 5px; cursor: pointer; color: white;">
+                                    进入应用
+                                </button>
+                                <button onclick="logout()" style="padding: 10px 20px; background: #ff6b6b; border: none; border-radius: 5px; cursor: pointer; color: white;">
+                                    退出登录
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    console.log('欢迎界面显示完成！');
+                } catch (error) {
+                    console.error('初始化失败:', error);
+                    mainApp.innerHTML = `
+                        <div style="padding: 20px; text-align: center;">
+                            <h1>🎉 登录成功！</h1>
+                            <p>欢迎回来，${currentUser ? currentUser.name : '用户'}！</p>
+                            <p>应用正在加载中...</p>
+                            <button onclick="location.reload()" style="padding: 10px 20px; background: #90EE90; border: none; border-radius: 5px; cursor: pointer;">
+                                刷新页面
+                            </button>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('显示主应用失败:', error);
+                alert('显示主应用失败: ' + error.message);
             }
-            
-            if (mainApp) {
-                mainApp.classList.add('active');
-                console.log('显示主应用');
-            }
-            
-            initializeApp();
         }
         
         // 显示认证选择页面
@@ -3484,38 +3588,282 @@
             document.getElementById('registerForm').classList.add('active');
         }
         
+        // 显示主界面
+        function showMainInterface() {
+            console.log('显示主界面...');
+            try {
+                // 恢复原始的主应用HTML结构
+                const mainApp = document.getElementById('mainApp');
+                mainApp.innerHTML = `
+                    <header class="header">
+                        <h1 class="header-title gradient-text">🌈 朋友圈 🎨</h1>
+                    </header>
+
+                    <div class="create-moment">
+                        <!-- 用户信息显示区域 -->
+                        <div class="user-profile-display">
+                            <div class="user-avatar">
+                                <div id="userAvatarDisplay" class="avatar-circle"></div>
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name" id="userNameDisplay">${currentUser ? currentUser.name : '用户'}</div>
+                                <div class="user-id" id="userIDDisplay">ID: ${currentUser ? currentUser.userId : '未知'}</div>
+                            </div>
+                            <div class="user-actions">
+                                <button class="profile-action-btn" onclick="openSettings()" title="个人设置">
+                                    ⚙️
+                                </button>
+                                <button class="profile-action-btn" onclick="openFriendsPanel()" title="好友管理">
+                                    👥
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="create-tabs">
+                            <button class="tab-button active" onclick="switchTab('text')">✍️ 文字</button>
+                            <button class="tab-button" onclick="switchTab('voice')">🎙️ 语音</button>
+                            <button class="tab-button" onclick="switchTab('ai')">🧠 AI助手</button>
+                            <button class="tab-button" onclick="switchTab('capsule')">🕰️ 时间胶囊</button>
+                        </div>
+                        
+                        <div id="textTab" class="tab-content active">
+                            <textarea 
+                                class="create-moment-input" 
+                                placeholder="分享你的想法..." 
+                                id="momentContent"
+                                rows="3"
+                            ></textarea>
+                            
+                            <div class="mood-selector">
+                                <span>今天的心情：</span>
+                                <div class="mood-options">
+                                    <span class="mood-option selected" data-mood="🥰" onclick="selectMood('🥰')">🥰</span>
+                                    <span class="mood-option" data-mood="😎" onclick="selectMood('😎')">😎</span>
+                                    <span class="mood-option" data-mood="🤗" onclick="selectMood('🤗')">🤗</span>
+                                    <span class="mood-option" data-mood="🤔" onclick="selectMood('🤔')">🤔</span>
+                                    <span class="mood-option" data-mood="🥺" onclick="selectMood('🥺')">🥺</span>
+                                    <span class="mood-option" data-mood="🤯" onclick="selectMood('🤯')">🤯</span>
+                                </div>
+                            </div>
+                            <div class="privacy-selector">
+                                <span>隐私：</span>
+                                <span class="privacy-option selected" data-privacy="friends" onclick="selectPrivacy('friends')">
+                                    🤝 仅好友
+                                </span>
+                                <span class="privacy-option" data-privacy="private" onclick="selectPrivacy('private')">
+                                    🛡️ 仅自己
+                                </span>
+                            </div>
+                            <button class="submit-button" id="submitBtn" onclick="handleCreateMoment()">发布</button>
+                        </div>
+                        
+                        <div id="voiceTab" class="tab-content">
+                            <div class="voice-recorder">
+                                <button class="voice-button" id="recordButton" onclick="toggleRecording()">
+                                    🎙️ 点击录音
+                                </button>
+                                <div class="voice-status" id="voiceStatus"></div>
+                                <div class="voice-waveform" id="voiceWaveform"></div>
+                            </div>
+                            <button class="submit-button" id="voiceSubmitBtn" disabled>发布语音</button>
+                        </div>
+                        
+                        <div id="aiTab" class="tab-content">
+                            <div class="ai-upload-area">
+                                <input type="file" id="aiImageInput" accept="image/*" multiple style="display: none;" onchange="handleAIUpload(event)">
+                                <button class="upload-button" onclick="document.getElementById('aiImageInput').click()">
+                                    📸 上传照片
+                                </button>
+                                <div class="ai-preview" id="aiPreview"></div>
+                            </div>
+                            <button class="ai-generate-button" onclick="generateAISummary()">🧠 生成AI总结</button>
+                            <div class="ai-result" id="aiResult"></div>
+                        </div>
+                        
+                        <div id="capsuleTab" class="tab-content">
+                            <textarea 
+                                class="create-moment-input" 
+                                placeholder="写给未来的自己..." 
+                                id="capsuleContent"
+                                rows="3"
+                            ></textarea>
+                            <div class="capsule-settings">
+                                <label>🕰️ 解锁时间：</label>
+                                <input type="date" id="capsuleDate" min="">
+                                <input type="time" id="capsuleTime" value="12:00">
+                            </div>
+                            <button class="submit-button" id="capsuleSubmitBtn" onclick="createTimeCapsule()">创建时间胶囊</button>
+                        </div>
+                    </div>
+
+                    <!-- 底部导航栏 -->
+                    <div class="bottom-nav">
+                        <div class="nav-item active" onclick="switchView('list')">
+                            <div class="nav-icon">🏠</div>
+                            <div class="nav-label">首页</div>
+                        </div>
+                        <div class="nav-item" onclick="switchView('timeline')">
+                            <div class="nav-icon">📅</div>
+                            <div class="nav-label">时间线</div>
+                        </div>
+                        <div class="nav-item" onclick="switchView('my')">
+                            <div class="nav-icon">👤</div>
+                            <div class="nav-label">我的</div>
+                        </div>
+                        <div class="nav-item" onclick="switchView('circles')">
+                            <div class="nav-icon">👥</div>
+                            <div class="nav-label">圈子</div>
+                        </div>
+                        <div class="nav-item" onclick="switchView('friends')">
+                            <div class="nav-icon">👫</div>
+                            <div class="nav-label">好友</div>
+                        </div>
+                    </div>
+
+                    <div id="momentsList" class="moments-view">
+                        <!-- 动态内容将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div id="timelineView" class="timeline-view">
+                        <!-- 时间线内容将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div id="circlesView" class="circles-view" style="display: none;">
+                        <!-- 圈子内容将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div id="myView" class="my-view" style="display: none;">
+                        <!-- 我的动态内容将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div id="friendsView" class="friends-view" style="display: none;">
+                        <!-- 好友内容将通过JavaScript动态生成 -->
+                    </div>
+                `;
+                
+                // 调用初始化函数
+                initializeApp();
+                console.log('主界面初始化完成！');
+            } catch (error) {
+                console.error('主界面初始化失败:', error);
+                alert('主界面加载失败: ' + error.message);
+            }
+        }
+        
+
+        
+        // 确保测试用户存在
+        function ensureTestUserExists() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // 检查是否已有测试用户
+            const testUserExists = users.some(u => u.userId === 'test123');
+            
+            if (!testUserExists) {
+                console.log('创建测试用户...');
+                const testUser = {
+                    id: '1',
+                    name: '测试用户',
+                    userId: 'test123',
+                    password: '123456',
+                    avatar: 'https://via.placeholder.com/40/90EE90/333333?text=测',
+                    createdAt: new Date().toISOString()
+                };
+                users.push(testUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('测试用户已创建:', testUser);
+            } else {
+                console.log('测试用户已存在');
+            }
+        }
+        
         // 处理登录
         function handleLogin() {
-            const userId = document.getElementById('loginUserId').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            console.log('=== 登录按钮被点击 ===');
+            console.log('开始登录流程...');
+            
+            // 检查输入框是否存在
+            const userIdInput = document.getElementById('loginUserId');
+            const passwordInput = document.getElementById('loginPassword');
+            
+            if (!userIdInput || !passwordInput) {
+                console.error('找不到输入框元素');
+                alert('页面元素加载错误，请刷新页面重试');
+                return;
+            }
+            
+            const userId = userIdInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            console.log('输入框原始值 - 用户ID:', userIdInput.value);
+            console.log('输入框原始值 - 密码:', passwordInput.value);
+            console.log('处理后的用户ID:', userId);
+            console.log('处理后的密码:', password);
+            console.log('用户ID长度:', userId.length);
+            console.log('密码长度:', password.length);
             
             if (!userId || !password) {
                 alert('请填写完整的登录信息');
                 return;
             }
             
+            // 确保测试用户存在
+            ensureTestUserExists();
+            
             // 从localStorage获取用户数据
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.userId === userId);
+            console.log('所有用户数据:', users);
+            console.log('用户数据长度:', users.length);
+            
+            // 显示所有用户的ID，帮助调试
+            users.forEach((u, index) => {
+                console.log(`用户${index + 1}:`, u.userId, u.name);
+            });
+            
+            // 详细比较用户ID
+            console.log('正在查找用户ID:', userId);
+            console.log('用户ID类型:', typeof userId);
+            console.log('用户ID是否为空:', userId === '');
+            
+            const user = users.find(u => {
+                console.log(`比较: "${u.userId}" === "${userId}"`, u.userId === userId);
+                return u.userId === userId;
+            });
+            console.log('找到的用户:', user);
             
             if (!user) {
-                alert('用户ID不存在');
+                console.log('用户ID不存在，请检查以下ID:');
+                users.forEach(u => console.log('- ' + u.userId));
+                alert('用户ID不存在，请检查ID是否正确\n\n可用用户ID：\n' + users.map(u => u.userId).join('\n'));
                 return;
             }
             
             if (user.password !== password) {
-                alert('密码错误');
+                console.log('密码比较失败:');
+                console.log('存储的密码:', user.password);
+                console.log('输入的密码:', password);
+                console.log('密码类型 - 存储:', typeof user.password);
+                console.log('密码类型 - 输入:', typeof password);
+                console.log('密码长度 - 存储:', user.password.length);
+                console.log('密码长度 - 输入:', password.length);
+                alert('密码错误\n\n正确密码：' + user.password);
                 return;
             }
+            
+            console.log('登录验证成功，开始登录...');
             
             // 登录成功
             currentUser = user;
             isLoggedIn = true;
             localStorage.setItem('currentUser', JSON.stringify(user));
             
+            console.log('用户数据已保存，显示主应用...');
+            
             // 添加成功动画和视觉反馈
             const card = document.querySelector('.auth-card');
-            card.style.animation = 'successBounce 0.6s ease-in-out';
+            if (card) {
+                card.style.animation = 'successBounce 0.6s ease-in-out';
+            }
             
             // 创建成功粒子爆炸效果
             createSuccessParticles();
@@ -3622,6 +3970,17 @@
                 alert('已退出登录');
             }
         }
+        
+        // 重置所有数据（用于测试）
+        function resetAllData() {
+            if (confirm('确定要清除所有数据吗？这将删除所有用户和动态数据。')) {
+                localStorage.clear();
+                alert('所有数据已清除，页面将重新加载');
+                location.reload();
+            }
+        }
+        
+
         
         // 应用数据
         let moments = [];
@@ -4189,12 +4548,21 @@
         
         // 页面加载时检查登录状态
         window.addEventListener('load', () => {
+            console.log('=== 页面加载完成 ===');
+            console.log('开始初始化...');
+            
+            // 页面初始化
             console.log('页面加载完成，开始初始化...');
+            
+            // 确保测试用户存在
+            ensureTestUserExists();
+            
             checkLoginStatus();
             createParticles();
         });
 
-        // 注册Service Worker
+        // 注册Service Worker（暂时禁用，避免CORS问题）
+        /*
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
@@ -4206,6 +4574,7 @@
                     });
             });
         }
+        */
 
         // 显示安装提示
         let deferredPrompt;
@@ -4863,20 +5232,53 @@
 
         // 视图切换
         function switchView(viewName) {
+            console.log('切换到视图:', viewName);
+            
+            // 隐藏所有视图
+            const views = ['momentsList', 'timelineView', 'myView', 'circlesView', 'friendsView'];
+            views.forEach(viewId => {
+                const element = document.getElementById(viewId);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // 显示选中的视图
             if (viewName === 'list') {
                 document.getElementById('momentsList').style.display = 'block';
-                document.getElementById('timelineView').style.display = 'none';
-            } else {
-                document.getElementById('momentsList').style.display = 'none';
+                renderMoments();
+            } else if (viewName === 'timeline') {
                 document.getElementById('timelineView').style.display = 'block';
                 renderTimeline();
+            } else if (viewName === 'my') {
+                document.getElementById('myView').style.display = 'block';
+                renderMyMoments();
+            } else if (viewName === 'circles') {
+                document.getElementById('circlesView').style.display = 'block';
+                renderCirclesView();
+            } else if (viewName === 'friends') {
+                document.getElementById('friendsView').style.display = 'block';
+                renderFriendsView();
             }
             
-            // 更新按钮状态
-            document.querySelectorAll('[onclick^="switchView"]').forEach(btn => {
-                btn.classList.remove('active');
+            // 更新底部导航按钮状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // 根据视图名称找到对应的导航项
+            const navMap = {
+                'list': 0,
+                'timeline': 1,
+                'my': 2,
+                'circles': 3,
+                'friends': 4
+            };
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            if (navMap[viewName] !== undefined) {
+                navItems[navMap[viewName]].classList.add('active');
+            }
         }
 
         // 心情选择
