@@ -3644,7 +3644,7 @@
                             id: s.id,
                             name: s.name,
                             userId: s.userId,
-                            avatar: `https://via.placeholder.com/40/4ECDC4/FFFFFF?text=${s.name.charAt(0)}`
+                            avatar: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="%234ECDC4"/><text x="20" y="25" text-anchor="middle" fill="white" font-size="16" font-family="Arial">${s.name.charAt(0)}</text></svg>`
                         });
                     }
                 });
@@ -3786,7 +3786,7 @@
                 name: nickname,
                 userId: userId,
                 password: password,
-                avatar: `https://via.placeholder.com/40/90EE90/333333?text=${nickname.charAt(0)}`,
+                                    avatar: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="%2390EE90"/><text x="20" y="25" text-anchor="middle" fill="%23333333" font-size="16" font-family="Arial">${nickname.charAt(0)}</text></svg>`,
                 createdAt: new Date().toISOString()
             };
             
@@ -3944,7 +3944,7 @@
                     id: (index + 2).toString(), // 从2开始，因为1是当前用户
                     name: name,
                     userId: generateUniqueUserId(name),
-                    avatar: `https://via.placeholder.com/40/${sampleColors[index].replace('#', '')}/FFFFFF?text=${name.charAt(0)}`
+                    avatar: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="${sampleColors[index].replace('#', '%23')}"/><text x="20" y="25" text-anchor="middle" fill="white" font-size="16" font-family="Arial">${name.charAt(0)}</text></svg>`
                 });
             });
             
@@ -4739,7 +4739,7 @@
             if (userSettings.avatarImage) {
                 currentUser.avatar = userSettings.avatarImage;
             } else {
-                currentUser.avatar = `https://via.placeholder.com/40/${userSettings.avatarColor.replace('#', '')}/${userSettings.avatarTextColor.replace('#', '')}?text=${newName}`;
+                currentUser.avatar = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="${userSettings.avatarColor.replace('#', '%23')}"/><text x="20" y="25" text-anchor="middle" fill="${userSettings.avatarTextColor.replace('#', '%23')}" font-size="16" font-family="Arial">${newName.charAt(0)}</text></svg>`;
             }
             currentUser.name = newName;
 
@@ -5640,7 +5640,7 @@
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 samples.forEach(s => {
                     if (!users.some(u => u.userId === s.userId)) {
-                        users.push({ id: s.id, name: s.name, userId: s.userId, avatar: `https://via.placeholder.com/40/4ECDC4/FFFFFF?text=${s.name.charAt(0)}` });
+                        users.push({ id: s.id, name: s.name, userId: s.userId, avatar: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="%234ECDC4"/><text x="20" y="25" text-anchor="middle" fill="white" font-size="16" font-family="Arial">${s.name.charAt(0)}</text></svg>` });
                     }
                 });
                 localStorage.setItem('users', JSON.stringify(users));
